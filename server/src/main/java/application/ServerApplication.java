@@ -5,18 +5,21 @@ import udp.Response;
 import udp.UDPserver;
 import utils.CollectionManager;
 import utils.CommandsManager;
+import utils.DBmanager;
 import utils.IOutil;
 
 public class ServerApplication {
     private IOutil io;
     private CommandsManager commandsManager;
     private CollectionManager collectionManager;
+    private DBmanager dbmanager;
     private UDPserver udp;
 
     public ServerApplication(){
         io = new IOutil();
         collectionManager = new CollectionManager(io);
-        commandsManager = new CommandsManager(io, collectionManager);
+        dbmanager = new DBmanager(io);
+        commandsManager = new CommandsManager(io, collectionManager, dbmanager);
         udp = new UDPserver(io);
     }
 

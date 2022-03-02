@@ -21,12 +21,14 @@ public class CommandsManager {
     private HashMap<String, ExtendedCommand> extendedCommandList;
     private IOutil io;
     CollectionManager collectionManager;
+    DBmanager dbmanager;
 
     ArrayDeque<String> history;
 
-    public CommandsManager(IOutil ioutil, CollectionManager manager){
-        io = ioutil;
-        collectionManager = manager;
+    public CommandsManager(IOutil io, CollectionManager collectionManager, DBmanager dbmanager) {
+        this.io = io;
+        this.collectionManager = collectionManager;
+        this.dbmanager = dbmanager;
         history = new ArrayDeque<String>();
         fillLists();
     }
@@ -39,7 +41,7 @@ public class CommandsManager {
 
         commandsList.put("info", new Info(collectionManager));
 
-        extendedCommandList.put("add", new Add(collectionManager));
+        extendedCommandList.put("add", new Add(collectionManager, dbmanager));
     }
 
     public Response executeRequest(Request request){

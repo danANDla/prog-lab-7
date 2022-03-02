@@ -1,7 +1,8 @@
 package commands;
 
 public enum CommandStatus {
-    OK("command executed successfully");
+    OK("command executed successfully"),
+    FAIL("command failed");
 
     private String description;
 

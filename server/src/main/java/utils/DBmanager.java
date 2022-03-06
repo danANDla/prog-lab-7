@@ -21,9 +21,13 @@ public class DBmanager {
     static {
         try {
             Class.forName("org.postgresql.Driver");
-            initConnect();
+            while(!initConnect()){
+                Thread.sleep(1000);
+            };
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 
@@ -49,47 +53,50 @@ public class DBmanager {
         return false;
     }
 
-    private static void initConnect() {
+    private static boolean initConnect() {
         try {
             if (getProps()) connection = DriverManager.getConnection(DBurl, DBusername, DBpassword);
             System.out.println(DBurl + DBusername + DBpassword);
             if (connection != null) {
                 System.out.println("Connected to DB");
+                return true;
             } else {
                 System.out.println("Failed connect to DB");
             }
         } catch (SQLException ex) {
             System.out.println("Exception while connecting to DB");
         }
+        return false;
     }
 
     public boolean add(MusicBand band) {
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(ADD, Statement.RETURN_GENERATED_KEYS);
             preparedStatement.setString(1, band.getName());
-            preparedStatement.setString(2, band.getCoordinates().getX().toString());
-            preparedStatement.setString(3, band.getCoordinates().getY().toString());
+            preparedStatement.setDouble(2, band.getCoordinates().getX());
+            preparedStatement.setInt(3, band.getCoordinates().getY());
             preparedStatement.setString(4, band.getCreationDate().toString());
-            preparedStatement.setString(5, Long.toString(band.getNumberOfParticipants()));
-            preparedStatement.setString(6, Integer.toString(band.getAlbumsCount()));
+            preparedStatement.setLong(5, band.getNumberOfParticipants());
+            preparedStatement.setInt(6, band.getAlbumsCount());
             preparedStatement.setString(7, band.getDescription());
             preparedStatement.setString(8, band.getGenre().toString());
             preparedStatement.setString(9, band.getBestAlbum().getName());
-            preparedStatement.setString(10, Integer.toString(band.getBestAlbum().getTracks()));
-            preparedStatement.setString(11, band.getBestAlbum().getLength().toString());
-            preparedStatement.setString(12, Double.toString(band.getBestAlbum().getSales()));
+            preparedStatement.setInt(10, band.getBestAlbum().getTracks());
+            preparedStatement.setInt(11, band.getBestAlbum().getLength());
+            preparedStatement.setDouble(12, band.getBestAlbum().getSales());
+            System.out.println(preparedStatement.toString());
             if (preparedStatement.executeUpdate() != 0) {
                 ResultSet resultSet = preparedStatement.getGeneratedKeys();
                 if (resultSet.next()) {
-                    Integer id = resultSet.getInt("id");
-                    band.setId(id);
+                    long id = resultSet.getLong(1);
+                    System.out.println(id);
                 }
                 io.printText("added new band");
                 return true;
             }
 
         } catch (SQLException e) {
-            io.printError("Exception while adding band to BD");
+            io.printError("Exception while adding band to DB " + e);
         }
         return false;
     }

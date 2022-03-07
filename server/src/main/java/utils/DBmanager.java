@@ -23,6 +23,7 @@ public class DBmanager {
     private static final String UPDATE = "UPDATE BANDS SET (name, x, y, creation, participants, albums, description," +
             "genre, bestname, besttracks, bestlength, bestsales) = (?,?,?,?,?,?,?,?,?,?,?,?) WHERE id=?";
     private static final String COUNT = "SELECT COUNT(*) FROM BANDS";
+    private static final String DELETE = "DELETE FROM BANDS";
 
     static {
         try {
@@ -139,6 +140,18 @@ public class DBmanager {
         return false;
     }
 
+    public boolean clearTable(){
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(DELETE);
+            if (preparedStatement.executeUpdate() != 0) {
+                return true;
+            }
+        } catch (SQLException e) {
+            io.printError("Exception while clearing the table");
+        }
+        return false;
+    }
+
     public int countRows(){
         int rows = -1;
         try{
@@ -148,7 +161,7 @@ public class DBmanager {
                 rows = res.getInt(1);
             }
         } catch (SQLException e) {
-            io.printError("Exception while adding band to DB " + e);
+            io.printError("Exception while counting rows " + e);
         }
         return rows;
     }

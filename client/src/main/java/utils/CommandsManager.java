@@ -42,6 +42,7 @@ public class CommandsManager {
         localComandsList.put("history", new History(history, io));
 
         commandsList.put("info", new Info());
+        commandsList.put("clear", new Clear());
         commandsList.put("add", new Add(musicBandFactory));
 
         argumentedComandsList.put("update", new Update(io, musicBandFactory));

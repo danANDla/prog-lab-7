@@ -2,6 +2,7 @@ package utils;
 
 
 import commands.Add;
+import commands.Clear;
 import commands.Info;
 import commands.Update;
 import commands.types.ArgumentedCommand;
@@ -41,6 +42,7 @@ public class CommandsManager {
         argumentedExtendedCommandList = new HashMap<String, ArgumentedExtendedCommand>();
 
         commandsList.put("info", new Info(dbmanager));
+        commandsList.put("clear", new Clear(dbmanager));
 
         extendedCommandList.put("add", new Add(dbmanager));
 

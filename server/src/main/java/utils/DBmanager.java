@@ -17,6 +17,7 @@ public class DBmanager {
 
     private static final String ADD = "INSERT INTO BANDS (name, x, y, creation, participants, albums, description, " +
             "genre, bestname, besttracks, bestlength, bestsales) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
+    private static final String COUNT = "SELECT COUNT(*) FROM BANDS";
 
     static {
         try {
@@ -99,5 +100,19 @@ public class DBmanager {
             io.printError("Exception while adding band to DB " + e);
         }
         return false;
+    }
+
+    public int countRows(){
+        int rows = -1;
+        try{
+            PreparedStatement preparedStatement = connection.prepareStatement(COUNT);
+            ResultSet res = preparedStatement.executeQuery();
+            if(res.next()){
+                rows = res.getInt(1);
+            }
+        } catch (SQLException e) {
+            io.printError("Exception while adding band to DB " + e);
+        }
+        return rows;
     }
 }

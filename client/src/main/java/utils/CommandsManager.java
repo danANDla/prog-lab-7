@@ -9,6 +9,8 @@ import udp.Request;
 import udp.UDPclient;
 
 import java.net.SocketAddress;
+import java.net.SocketException;
+import java.net.SocketTimeoutException;
 import java.util.ArrayDeque;
 import java.util.HashMap;
 import java.util.Locale;
@@ -29,7 +31,7 @@ public class CommandsManager {
         asker = new Asker(io);
         musicBandFactory = new MusicBandFactory(asker);
         history = new ArrayDeque<String>();
-        udp = new UDPclient();
+        udp = new UDPclient(io);
         fillLists();
     }
 
@@ -73,7 +75,6 @@ public class CommandsManager {
             if(history.size() > 14){
                 history.removeLast();
             }
-
             udp.receiveResponse();
         }
         else if(commandsList.containsKey(command[0])){
@@ -86,7 +87,6 @@ public class CommandsManager {
             if(history.size() > 14){
                 history.removeLast();
             }
-
             udp.receiveResponse();
         }
         else{

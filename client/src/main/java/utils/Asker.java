@@ -19,7 +19,7 @@ public class Asker implements Serializable {
         str = io.readLine().trim();
         while(str.equals("")){
             io.printError("Это обязательно поле");
-            str = io.readLine();
+            str = io.readLine().trim();
         }
         return str;
     }
@@ -255,7 +255,7 @@ public class Asker implements Serializable {
         boolean valid = false;
         while (!valid){
             str = io.readLine().trim();
-            if(str.equals("")) return null;
+            if(str.equals("")) return albumLength;
             try{
                 albumLength = Integer.parseInt(getNonEmpty());
                 valid = true;

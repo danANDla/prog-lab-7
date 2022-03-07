@@ -3,12 +3,24 @@ package commands;
 import commands.types.Command;
 import udp.Response;
 import utils.CollectionManager;
+import utils.DBmanager;
+import utils.IOutil;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.attribute.FileTime;
+import java.util.Properties;
 
 public class Info implements Command {
+    private static String dbpath;
     CollectionManager collectionManager;
+    DBmanager dbmanager;
 
-    public Info(CollectionManager collectionManager) {
+    public Info(CollectionManager collectionManager, DBmanager dbmanager) {
         this.collectionManager = collectionManager;
+        this.dbmanager = dbmanager;
     }
 
     @Override
@@ -16,7 +28,16 @@ public class Info implements Command {
         Response resp = new Response();
         resp.setReceiver(null);
         resp.setCommand("info");
-        resp.setMsg(collectionManager.info());
+        int rows = dbmanager.countRows();
+        String msg = "";
+        if(rows < 1){
+            msg = "Коллекция пуста";
+        }
+        else{
+            msg = "дата инициализации коллекции: " + collectionManager.getCreationDate() + "\n" +
+                    "количество элементов в коллекции: " + rows;
+        }
+        resp.setMsg(msg);
         return resp;
     }
 

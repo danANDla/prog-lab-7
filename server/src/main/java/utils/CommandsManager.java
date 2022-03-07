@@ -39,7 +39,7 @@ public class CommandsManager {
         extendedCommandList = new HashMap<String, ExtendedCommand>();
         argumentedExtendedCommandList = new HashMap<String, ArgumentedExtendedCommand>();
 
-        commandsList.put("info", new Info(collectionManager));
+        commandsList.put("info", new Info(collectionManager, dbmanager));
 
         extendedCommandList.put("add", new Add(collectionManager, dbmanager));
     }

@@ -32,6 +32,10 @@ public class CollectionManager {
         this.bandsList = bandsList;
     }
 
+    public LocalDate getCreationDate() {
+        return creationDate;
+    }
+
     public boolean validate(MusicBand band){
         System.out.println(band);
         boolean res = true;

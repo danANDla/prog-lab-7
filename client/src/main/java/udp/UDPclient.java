@@ -1,6 +1,8 @@
 package udp;
 
 
+import utils.IOutil;
+
 import java.io.*;
 import java.net.*;
 
@@ -10,12 +12,13 @@ public class UDPclient {
     private final static int SERVICE_PORT = 50001;
     private DatagramSocket clientSocket;
     private InetAddress IPAddress;
+    private IOutil io;
 
     // Создайте соответствующие буферы
     private byte[] sendingDataBuffer = new byte[1024];
     private byte[] receivingDataBuffer = new byte[1024];
 
-    public UDPclient() {
+    public UDPclient(IOutil ioutil) {
         /* Создайте экземпляр клиентского сокета.
         Нет необходимости в привязке к определенному порту */
         try {
@@ -23,8 +26,9 @@ public class UDPclient {
             // Получите IP-адрес сервера
             IPAddress = InetAddress.getByName("localhost");
         } catch (SocketException | UnknownHostException e) {
-            System.out.println("Unable create client socket");
+            io.printError("Error: unable create client socket");
         }
+        io = ioutil;
     }
 
     public ByteArrayOutputStream serializeReq(Request newReq) throws IOException {
@@ -61,22 +65,23 @@ public class UDPclient {
             Response result = (Response) oip.readObject();
             return result;
         } catch (IOException | ClassNotFoundException e) {
-            System.out.println("troubles " + e);
+            io.printError("deserializeResp: " + e);
         }
         return null;
     }
 
-    public void receiveResponse(){
+    public void receiveResponse() {
         try{
+            clientSocket.setSoTimeout(10000);
             // Получите ответ от сервера, т.е. предложение из заглавных букв
             DatagramPacket receivingPacket = new DatagramPacket(receivingDataBuffer, receivingDataBuffer.length);
             clientSocket.receive(receivingPacket);
             Response received = deserializeResp(receivingDataBuffer);
 
-            System.out.println(received);
+            io.printText(received.toString());
         }
         catch (IOException e){
-            e.printStackTrace();
+            io.printError("can't send data to server, check your connection and try again later");
         }
     }
 

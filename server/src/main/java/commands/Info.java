@@ -15,11 +15,9 @@ import java.util.Properties;
 
 public class Info implements Command {
     private static String dbpath;
-    CollectionManager collectionManager;
     DBmanager dbmanager;
 
-    public Info(CollectionManager collectionManager, DBmanager dbmanager) {
-        this.collectionManager = collectionManager;
+    public Info(DBmanager dbmanager) {
         this.dbmanager = dbmanager;
     }
 
@@ -34,7 +32,7 @@ public class Info implements Command {
             msg = "Коллекция пуста";
         }
         else{
-            msg = "дата инициализации коллекции: " + collectionManager.getCreationDate() + "\n" +
+            msg = "дата инициализации коллекции: " + dbmanager.getCreationDate() + "\n" +
                     "количество элементов в коллекции: " + rows;
         }
         resp.setMsg(msg);

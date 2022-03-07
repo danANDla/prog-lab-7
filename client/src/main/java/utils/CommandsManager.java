@@ -46,6 +46,8 @@ public class CommandsManager {
 
         commandsList.put("info", new Info());
         commandsList.put("add", new Add(musicBandFactory));
+
+        argumentedComandsList.put("update", new Update(io, musicBandFactory));
     }
 
     public void executeCommand(String newCommand){
@@ -70,12 +72,16 @@ public class CommandsManager {
             RemoteArgumentedCommand parsedCommand = argumentedComandsList.get(command[0]);
 
             //TODO add command package and send
+            if(parsedCommand.parseArgs(command)){
+                Request newReq = parsedCommand.makeRequest(sender);
+                udp.sendCommand(newReq);
+                udp.receiveResponse();
+            }
 
             history.addFirst(command[0]);
             if(history.size() > 14){
                 history.removeLast();
             }
-            udp.receiveResponse();
         }
         else if(commandsList.containsKey(command[0])){
             RemoteCommand parsedCommand = commandsList.get(command[0]);

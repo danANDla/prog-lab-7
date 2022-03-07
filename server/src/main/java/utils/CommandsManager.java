@@ -3,6 +3,7 @@ package utils;
 
 import commands.Add;
 import commands.Info;
+import commands.Update;
 import commands.types.ArgumentedCommand;
 import commands.types.ArgumentedExtendedCommand;
 import commands.types.Command;
@@ -39,9 +40,11 @@ public class CommandsManager {
         extendedCommandList = new HashMap<String, ExtendedCommand>();
         argumentedExtendedCommandList = new HashMap<String, ArgumentedExtendedCommand>();
 
-        commandsList.put("info", new Info(collectionManager, dbmanager));
+        commandsList.put("info", new Info(dbmanager));
 
-        extendedCommandList.put("add", new Add(collectionManager, dbmanager));
+        extendedCommandList.put("add", new Add(dbmanager));
+
+        argumentedExtendedCommandList.put("update", new Update(dbmanager));
     }
 
     public Response executeRequest(Request request){

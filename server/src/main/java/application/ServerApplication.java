@@ -35,7 +35,7 @@ public class ServerApplication {
                 Response resp = commandsManager.executeRequest(recieved);
                 udp.sendReponse(resp, recieved.getSender());
             } catch (Exception e){
-                io.printError("Exception while receiving package");
+                io.printError("Exception while receiving package: " + e);
             }
         }
     }

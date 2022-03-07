@@ -8,12 +8,10 @@ import utils.CollectionManager;
 import utils.DBmanager;
 
 public class Add implements ExtendedCommand {
-    private CollectionManager collecManager;
     private DBmanager dbmanager;
     private MusicBand band;
 
-    public Add(CollectionManager collecManager, DBmanager dbmanager) {
-        this.collecManager = collecManager;
+    public Add(DBmanager dbmanager) {
         this.dbmanager = dbmanager;
     }
 

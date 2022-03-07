@@ -1,11 +1,13 @@
 package utils;
 
 import collection.MusicBand;
+import commands.Update;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.Properties;
 
 public class DBmanager {
@@ -14,9 +16,12 @@ public class DBmanager {
     private static String DBusername;
     private static String DBpassword;
     private static IOutil io;
+    private LocalDate creationDate;
 
-    private static final String ADD = "INSERT INTO BANDS (name, x, y, creation, participants, albums, description, " +
+    private static final String ADD = "INSERT INTO BANDS (name, x, y, creation, participants, albums, description," +
             "genre, bestname, besttracks, bestlength, bestsales) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
+    private static final String UPDATE = "UPDATE BANDS SET (name, x, y, creation, participants, albums, description," +
+            "genre, bestname, besttracks, bestlength, bestsales) = (?,?,?,?,?,?,?,?,?,?,?,?) WHERE id=?";
     private static final String COUNT = "SELECT COUNT(*) FROM BANDS";
 
     static {
@@ -34,6 +39,11 @@ public class DBmanager {
 
     public DBmanager(IOutil ioutil) {
         io = ioutil;
+        creationDate = LocalDate.now();
+    }
+
+    public LocalDate getCreationDate() {
+        return creationDate;
     }
 
     private static boolean getProps() {
@@ -98,6 +108,33 @@ public class DBmanager {
 
         } catch (SQLException e) {
             io.printError("Exception while adding band to DB " + e);
+        }
+        return false;
+    }
+
+    public boolean update(MusicBand band, int bandid){
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(UPDATE, Statement.RETURN_GENERATED_KEYS);
+            preparedStatement.setString(1, band.getName());
+            preparedStatement.setDouble(2, band.getCoordinates().getX());
+            preparedStatement.setInt(3, band.getCoordinates().getY());
+            preparedStatement.setString(4, band.getCreationDate().toString());
+            preparedStatement.setLong(5, band.getNumberOfParticipants());
+            preparedStatement.setInt(6, band.getAlbumsCount());
+            preparedStatement.setString(7, band.getDescription());
+            preparedStatement.setString(8, band.getGenre().toString());
+            preparedStatement.setString(9, band.getBestAlbum().getName());
+            preparedStatement.setInt(10, band.getBestAlbum().getTracks());
+            preparedStatement.setInt(11, band.getBestAlbum().getLength());
+            preparedStatement.setDouble(12, band.getBestAlbum().getSales());
+            preparedStatement.setInt(13, bandid);
+            System.out.println(preparedStatement.toString());
+            if (preparedStatement.executeUpdate() != 0) {
+                return true;
+            }
+
+        } catch (SQLException e) {
+            io.printError("Exception while updating band " + e);
         }
         return false;
     }

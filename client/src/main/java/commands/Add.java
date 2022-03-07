@@ -1,7 +1,7 @@
 package commands;
 
 import collection.MusicBand;
-import collection.MusicBandFactory;
+import utils.MusicBandFactory;
 import commands.types.RemoteCommand;
 import udp.Request;
 

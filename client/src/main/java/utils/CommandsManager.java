@@ -1,6 +1,5 @@
 package utils;
 
-import collection.MusicBandFactory;
 import commands.*;
 import commands.types.LocalCommand;
 import commands.types.RemoteArgumentedCommand;
@@ -9,8 +8,6 @@ import udp.Request;
 import udp.UDPclient;
 
 import java.net.SocketAddress;
-import java.net.SocketException;
-import java.net.SocketTimeoutException;
 import java.util.ArrayDeque;
 import java.util.HashMap;
 import java.util.Locale;

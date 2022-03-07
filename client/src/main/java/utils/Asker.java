@@ -3,9 +3,12 @@ package utils;
 import collection.Album;
 import collection.Coordinates;
 import collection.MusicGenre;
+import sun.util.resources.LocaleData;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.Date;
+import java.util.Locale;
 
 public class Asker implements Serializable {
     private final IOutil io;
@@ -123,6 +126,10 @@ public class Asker implements Serializable {
         creationDate.setMonth(month);
         creationDate.setDate(day);
         return creationDate;
+    }
+
+    public Date generateDate(){
+        return new Date(System.currentTimeMillis());
     }
 
     public long askParticipants(){

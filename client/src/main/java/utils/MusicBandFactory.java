@@ -1,5 +1,6 @@
-package collection;
+package utils;
 
+import collection.MusicBand;
 import utils.Asker;
 
 import java.io.Serializable;
@@ -15,7 +16,7 @@ public class MusicBandFactory implements Serializable {
         return new MusicBand(
                 asker.askName(),
                 asker.askCoordinates(),
-                asker.askDate(),
+                asker.generateDate(),
                 asker.askParticipants(),
                 asker.askAlbums(),
                 asker.askDescription(),

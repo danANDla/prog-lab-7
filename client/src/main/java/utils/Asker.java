@@ -119,7 +119,7 @@ public class Asker implements Serializable {
                 io.printError("Неправильный формат целого числа");
             }
         }
-        creationDate.setYear(year);
+        creationDate.setYear(year-1900);
         creationDate.setMonth(month);
         creationDate.setDate(day);
         return creationDate;

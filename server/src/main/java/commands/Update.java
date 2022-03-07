@@ -40,8 +40,10 @@ public class Update implements ArgumentedExtendedCommand {
     @Override
     public Response execute() {
         CommandStatus res = CommandStatus.FAIL;
+        String msg = "";
         if(dbmanager.update(band, bandId)) res = CommandStatus.OK;
-        return new Response("update", res.getDescription(), null);
+        else msg = ": no such id";
+        return new Response("update", res.getDescription() + msg, null);
     }
 
     @Override

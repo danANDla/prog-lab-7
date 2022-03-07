@@ -78,7 +78,7 @@ public class UDPclient {
             clientSocket.receive(receivingPacket);
             Response received = deserializeResp(receivingDataBuffer);
 
-            io.printText(received.toString());
+            io.printText(received.getMsg());
         }
         catch (IOException e){
             io.printError("can't send data to server, check your connection and try again later");

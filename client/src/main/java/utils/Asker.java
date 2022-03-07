@@ -87,7 +87,10 @@ public class Asker implements Serializable {
         while(!yearvalid){
             try{
                 year = Integer.parseInt(getNonEmpty());
-                yearvalid = true;
+                if(!(year >= 0 && year <= 2022)){
+                    io.printError("Неправильные данные");
+                }
+                else yearvalid = true;
             } catch (NumberFormatException e){
                 io.printError("Неправильный формат целого числа");
             }
@@ -96,7 +99,10 @@ public class Asker implements Serializable {
         while(!monthvalid){
             try{
                 month = Integer.parseInt(getNonEmpty());
-                monthvalid = true;
+                if(!(month >= 1 && month <= 12)){
+                   io.printError("Неправильные данные");
+                }
+                else monthvalid = true;
             } catch (NumberFormatException e){
                 io.printError("Неправильный формат целого числа");
             }
@@ -105,7 +111,10 @@ public class Asker implements Serializable {
         while(!dayvalid){
             try{
                 day = Integer.parseInt(getNonEmpty());
-                dayvalid = true;
+                if(!(day >= 1 && day <= 31)){
+                    io.printError("Неправильные данные");
+                }
+                else dayvalid = true;
             } catch (NumberFormatException e){
                 io.printError("Неправильный формат целого числа");
             }

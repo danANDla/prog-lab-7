@@ -1,10 +1,7 @@
 package utils;
 
 
-import commands.Add;
-import commands.Clear;
-import commands.Info;
-import commands.Update;
+import commands.*;
 import commands.types.ArgumentedCommand;
 import commands.types.ArgumentedExtendedCommand;
 import commands.types.Command;
@@ -43,6 +40,8 @@ public class CommandsManager {
 
         commandsList.put("info", new Info(dbmanager));
         commandsList.put("clear", new Clear(dbmanager));
+
+        argumentedComandsList.put("remove", new Remove(dbmanager));
 
         extendedCommandList.put("add", new Add(dbmanager));
 

@@ -24,6 +24,7 @@ public class DBmanager {
             "genre, bestname, besttracks, bestlength, bestsales) = (?,?,?,?,?,?,?,?,?,?,?,?) WHERE id=?";
     private static final String COUNT = "SELECT COUNT(*) FROM BANDS";
     private static final String DELETE = "DELETE FROM BANDS";
+    private static final String DELETE_BY_ID = "DELETE FROM BANDS WHERE id=?";
 
     static {
         try {
@@ -148,6 +149,19 @@ public class DBmanager {
             }
         } catch (SQLException e) {
             io.printError("Exception while clearing the table");
+        }
+        return false;
+    }
+
+    public boolean removeById(int bandid){
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(DELETE_BY_ID);
+            preparedStatement.setInt(1, bandid);
+            if (preparedStatement.executeUpdate() == 1) {
+                return true;
+            }
+        } catch (SQLException e) {
+            io.printError("Exception while deleting element");
         }
         return false;
     }

@@ -46,6 +46,7 @@ public class CommandsManager {
         commandsList.put("add", new Add(musicBandFactory));
 
         argumentedComandsList.put("update", new Update(io, musicBandFactory));
+        argumentedComandsList.put("remove_by_id", new Remove(io));
     }
 
     public void executeCommand(String newCommand){

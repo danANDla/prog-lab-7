@@ -17,26 +17,26 @@ public class UDPserver {
     private DatagramChannel datagramChannel;
 
     // Серверный UDP-сокет запущен на этом порту
-    private final static int SERVICE_PORT=50001;
-    private final static int BUFFER_SIZE=4096;
+    private final static int SERVICE_PORT = 50001;
+    private final static int BUFFER_SIZE = 4096;
 
     private ByteBuffer buffer;
 
-    public UDPserver(IOutil ioutil){
+    public UDPserver(IOutil ioutil) {
         io = ioutil;
-        try{
+        try {
             datagramChannel = DatagramChannel.open();
             datagramChannel.bind(new InetSocketAddress(SERVICE_PORT));
             buffer = ByteBuffer.allocate(BUFFER_SIZE);
             buffer.clear();
-        } catch (SocketException e){
+        } catch (SocketException e) {
             io.printError("Unable to create server socket");
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    private Request deserializeReq(ByteBuffer buffer){
+    private Request deserializeReq(ByteBuffer buffer) {
         byte[] array = new byte[buffer.remaining()];
         buffer.get(array);
         ByteArrayInputStream bais = new ByteArrayInputStream(array);
@@ -49,7 +49,7 @@ public class UDPserver {
         return null;
     }
 
-    public Request recieveRequest() throws IOException{
+    public Request recieveRequest() throws IOException {
         /* Создайте экземпляр UDP-пакета для хранения клиентских данных с использованием буфера для полученных данных */
         System.out.println("Waiting for a client to connect...");
 
@@ -73,15 +73,25 @@ public class UDPserver {
         return bStream;
     }
 
-    public void sendReponse(Response resp, SocketAddress receiver){
-        try{
+    public void sendReponse(Response resp, SocketAddress receiver) {
+        try {
             resp.setReceiver(receiver);
             System.out.println(resp);
             System.out.println("Sending response to client...");
             ByteBuffer sendingBuffer = ByteBuffer.wrap(serializeResp(resp).toByteArray());
             datagramChannel.send(sendingBuffer, resp.getReceiver());
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        catch (IOException e){
+    }
+
+    public void sendError(ResponseError error, Request received) {
+        try {
+            Response resp = new Response(received.getCommand(), error.getDescription(), received.getSender());
+            System.out.println("Sending response to client...");
+            ByteBuffer sendingBuffer = ByteBuffer.wrap(serializeResp(resp).toByteArray());
+            datagramChannel.send(sendingBuffer, resp.getReceiver());
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }

@@ -1,13 +1,17 @@
 package utils;
 
+import collection.Album;
+import collection.Coordinates;
 import collection.MusicBand;
-import commands.Update;
+import collection.MusicGenre;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.*;
 import java.time.LocalDate;
+import java.util.Date;
+import java.util.LinkedHashSet;
 import java.util.Properties;
 
 public class DBmanager {
@@ -25,13 +29,15 @@ public class DBmanager {
     private static final String COUNT = "SELECT COUNT(*) FROM BANDS";
     private static final String DELETE = "DELETE FROM BANDS";
     private static final String DELETE_BY_ID = "DELETE FROM BANDS WHERE id=?";
+    private static final String SHOW = "SELECT * FROM BANDS";
 
     static {
         try {
             Class.forName("org.postgresql.Driver");
-            while(!initConnect()){
+            while (!initConnect()) {
                 Thread.sleep(1000);
-            };
+            }
+            ;
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         } catch (InterruptedException e) {
@@ -114,7 +120,7 @@ public class DBmanager {
         return false;
     }
 
-    public boolean update(MusicBand band, int bandid){
+    public boolean update(MusicBand band, int bandid) {
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(UPDATE, Statement.RETURN_GENERATED_KEYS);
             preparedStatement.setString(1, band.getName());
@@ -141,7 +147,7 @@ public class DBmanager {
         return false;
     }
 
-    public boolean clearTable(){
+    public boolean clearTable() {
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(DELETE);
             if (preparedStatement.executeUpdate() != 0) {
@@ -153,7 +159,7 @@ public class DBmanager {
         return false;
     }
 
-    public boolean removeById(int bandid){
+    public boolean removeById(int bandid) {
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(DELETE_BY_ID);
             preparedStatement.setInt(1, bandid);
@@ -166,17 +172,47 @@ public class DBmanager {
         return false;
     }
 
-    public int countRows(){
+    public int countRows() {
         int rows = -1;
-        try{
+        try {
             PreparedStatement preparedStatement = connection.prepareStatement(COUNT);
             ResultSet res = preparedStatement.executeQuery();
-            if(res.next()){
+            if (res.next()) {
                 rows = res.getInt(1);
             }
         } catch (SQLException e) {
             io.printError("Exception while counting rows " + e);
         }
         return rows;
+    }
+
+    public LinkedHashSet<MusicBand> show() {
+        LinkedHashSet<MusicBand> list = new LinkedHashSet<MusicBand>();
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(SHOW);
+            ResultSet res = preparedStatement.executeQuery();
+            while (res.next()) {
+                MusicBand band = new MusicBand(
+                        res.getString("name"),
+                        new Coordinates(res.getDouble("x"), res.getInt("y")),
+                        new Date(System.currentTimeMillis()),
+                        res.getLong("participants"),
+                        res.getInt("albums"),
+                        res.getString("description"),
+                        MusicGenre.BLUES,
+                        new Album(
+                                res.getString("bestname"),
+                                res.getInt("besttracks"),
+                                res.getInt("bestlength"),
+                                res.getDouble("bestsales")
+                        )
+                );
+                band.setId(res.getInt("id"));
+                list.add(band);
+            }
+        } catch (NullPointerException | SQLException e) {
+            io.printError("Exception while showing the table" + e);
+        }
+        return list;
     }
 }

@@ -14,13 +14,7 @@ public class Clear implements Command {
     @Override
     public Response execute() {
         CommandStatus res = CommandStatus.FAIL;
-        if(dbmanager.clearTable()) res = CommandStatus.OK;
+        if (dbmanager.clearTable()) res = CommandStatus.OK;
         return new Response("clear", res.getDescription(), null);
-    }
-
-    @Override
-    public String getdescription() {
-        String descr = "очистить коллекцию";
-        return descr;
     }
 }

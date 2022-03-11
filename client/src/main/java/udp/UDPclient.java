@@ -59,7 +59,7 @@ public class UDPclient {
         }
     }
 
-    public Response deserializeResp(byte[] buffer){
+    public Response deserializeResp(byte[] buffer) {
         ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
         try (ObjectInputStream oip = new ObjectInputStream(bais)) {
             Response result = (Response) oip.readObject();
@@ -70,22 +70,22 @@ public class UDPclient {
         return null;
     }
 
-    public void receiveResponse() {
-        try{
+    public Response receiveResponse() {
+        try {
             clientSocket.setSoTimeout(10000);
             // Получите ответ от сервера, т.е. предложение из заглавных букв
             DatagramPacket receivingPacket = new DatagramPacket(receivingDataBuffer, receivingDataBuffer.length);
             clientSocket.receive(receivingPacket);
             Response received = deserializeResp(receivingDataBuffer);
 
-            io.printText(received.getMsg());
+            return received;
+        } catch (IOException e) {
+            io.printError("can't receive response from server, check your connection and try again later");
         }
-        catch (IOException e){
-            io.printError("can't send data to server, check your connection and try again later");
-        }
+        return null;
     }
 
-    public SocketAddress getAddress(){
+    public SocketAddress getAddress() {
         return clientSocket.getLocalSocketAddress();
     }
 }

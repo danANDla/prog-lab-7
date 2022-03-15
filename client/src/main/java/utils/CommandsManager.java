@@ -109,7 +109,7 @@ public class CommandsManager {
                 }
                 if (rowsNumber > 0) {
                     for (int i = 0; i < rowsNumber; ++i) {
-                        udp.sendCommand(new Request("next", null, null, sender));
+                        //udp.sendCommand(new Request("next", null, null, sender));
                         resp = udp.receiveResponse();
                         if (resp != null) io.printText(resp.getMsg());
                     }

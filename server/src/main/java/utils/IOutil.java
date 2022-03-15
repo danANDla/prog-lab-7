@@ -17,9 +17,9 @@ public class IOutil {
     public void printText(String text){
         System.out.println(text);
     }
-    public void printWarning(String text){
-        System.out.println( "\u001B[33m" + text + "\u001B[0m");
-    }
+    public void printWarning(String text) { System.out.println( "\u001B[33m" + text + "\u001B[0m"); }
+    public void printSuccess(String text) { System.out.println( "\u001B[32m" + text + "\u001B[0m"); }
+    public void printFail(String text) { System.out.println( "\u001B[31m" + text + "\u001B[0m"); }
     public void printCommand(String commandName, String commandDescription){
         System.out.printf("  %-10s %-90s \n", commandName, commandDescription);
     }

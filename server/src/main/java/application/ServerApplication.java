@@ -12,6 +12,7 @@ import utils.IOutil;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ForkJoinPool;
 
 public class ServerApplication {
     private IOutil io;
@@ -20,6 +21,8 @@ public class ServerApplication {
     private DBmanager dbmanager;
     private UDPserver udp;
     private ExecutorService pool = Executors.newFixedThreadPool(5);
+    private ThreadPoolServer poolServer;
+    private ForkJoinPool forkJoinPool;
 
     public ServerApplication() {
         io = new IOutil();
@@ -27,10 +30,15 @@ public class ServerApplication {
         collectionManager = new CollectionManager(io, dbmanager);
         commandsManager = new CommandsManager(io, collectionManager, dbmanager);
         udp = new UDPserver(io);
+        forkJoinPool = new ForkJoinPool();
+        poolServer = new ThreadPoolServer(udp, io, commandsManager, forkJoinPool);
     }
 
     public void start() {
-        listening();
+//        listening();
+        collectionManager.sync();
+        io.printWarning("local collection synchronized with db");
+        new Thread(poolServer).start();
     }
 
     public void listening() {

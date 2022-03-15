@@ -24,16 +24,25 @@ public class UDPserver {
 
     public UDPserver(IOutil ioutil) {
         io = ioutil;
+    }
+
+    public boolean udpStart(){
         try {
             datagramChannel = DatagramChannel.open();
             datagramChannel.bind(new InetSocketAddress(SERVICE_PORT));
             buffer = ByteBuffer.allocate(BUFFER_SIZE);
             buffer.clear();
+            return true;
         } catch (SocketException e) {
             io.printError("Unable to create server socket");
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return false;
+    }
+
+    public void udpStop() throws IOException {
+        datagramChannel.close();
     }
 
     private Request deserializeReq(ByteBuffer buffer) {

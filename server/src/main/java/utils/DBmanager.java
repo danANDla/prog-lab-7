@@ -108,10 +108,9 @@ public class DBmanager {
                 ResultSet resultSet = preparedStatement.getGeneratedKeys();
                 if (resultSet.next()) {
                     long id = resultSet.getLong(1);
-                    System.out.println(id);
+                    io.printText("added band, id = " + id);
+                    return true;
                 }
-                io.printText("added new band");
-                return true;
             }
 
         } catch (SQLException e) {
@@ -120,7 +119,7 @@ public class DBmanager {
         return false;
     }
 
-    public boolean update(MusicBand band, int bandid) {
+    public boolean update(int bandid, MusicBand band) {
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(UPDATE, Statement.RETURN_GENERATED_KEYS);
             preparedStatement.setString(1, band.getName());
@@ -154,7 +153,7 @@ public class DBmanager {
                 return true;
             }
         } catch (SQLException e) {
-            io.printError("Exception while clearing the table");
+            io.printError("Exception while clearing the table" + e);
         }
         return false;
     }

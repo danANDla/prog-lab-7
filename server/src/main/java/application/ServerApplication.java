@@ -10,6 +10,8 @@ import utils.DBmanager;
 import utils.IOutil;
 
 import java.util.ArrayList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class ServerApplication {
     private IOutil io;
@@ -17,11 +19,12 @@ public class ServerApplication {
     private CollectionManager collectionManager;
     private DBmanager dbmanager;
     private UDPserver udp;
+    private ExecutorService pool = Executors.newFixedThreadPool(5);
 
     public ServerApplication() {
         io = new IOutil();
-        collectionManager = new CollectionManager(io);
         dbmanager = new DBmanager(io);
+        collectionManager = new CollectionManager(io, dbmanager);
         commandsManager = new CommandsManager(io, collectionManager, dbmanager);
         udp = new UDPserver(io);
     }
@@ -31,6 +34,8 @@ public class ServerApplication {
     }
 
     public void listening() {
+        collectionManager.sync();
+        io.printWarning("local collection synchronized with db");
         while (true) {
             try {
                 Request recieved = udp.recieveRequest();
@@ -39,7 +44,7 @@ public class ServerApplication {
                 if (respList == null) {
                     udp.sendError(ResponseError.INVALID_COMMAND, recieved);
                 } else {
-                    if (respList.size() == 1) {
+                    if (!commandsManager.isRich(recieved)) {
                         udp.sendReponse(respList.get(0), recieved.getSender());
                     } else {
                         io.printWarning("rich command");

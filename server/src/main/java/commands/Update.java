@@ -3,15 +3,16 @@ package commands;
 import collection.MusicBand;
 import commands.types.ArgumentedExtendedCommand;
 import udp.Response;
+import utils.CollectionManager;
 import utils.DBmanager;
 
 public class Update implements ArgumentedExtendedCommand {
-    DBmanager dbmanager;
+    private CollectionManager collectionManager;
     private int bandId;
     private MusicBand band;
 
-    public Update(DBmanager dbmanager) {
-        this.dbmanager = dbmanager;
+    public Update(CollectionManager collectionManager) {
+        this.collectionManager = collectionManager;
     }
 
     @Override
@@ -40,7 +41,7 @@ public class Update implements ArgumentedExtendedCommand {
     public Response execute() {
         CommandStatus res = CommandStatus.FAIL;
         String msg = "";
-        if (dbmanager.update(band, bandId)) res = CommandStatus.OK;
+        if (collectionManager.updateBand(bandId, band)) res = CommandStatus.OK;
         else msg = ": no such id";
         return new Response("update", res.getDescription() + msg, null);
     }

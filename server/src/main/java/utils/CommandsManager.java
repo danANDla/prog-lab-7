@@ -34,16 +34,16 @@ public class CommandsManager {
         argumentedExtendedCommandList = new HashMap<String, ArgumentedExtendedCommand>();
         richResponseCommandList = new HashMap<String, RichResponseCommand>();
 
-        commandsList.put("info", new Info(dbmanager));
-        commandsList.put("clear", new Clear(dbmanager));
+        commandsList.put("info", new Info(collectionManager));
+        commandsList.put("clear", new Clear(collectionManager));
 
-        argumentedComandsList.put("remove", new Remove(dbmanager));
+        argumentedComandsList.put("remove", new Remove(collectionManager));
 
-        extendedCommandList.put("add", new Add(dbmanager));
+        extendedCommandList.put("add", new Add(collectionManager));
 
-        argumentedExtendedCommandList.put("update", new Update(dbmanager));
+        argumentedExtendedCommandList.put("update", new Update(collectionManager));
 
-        richResponseCommandList.put("show", new Show(dbmanager));
+        richResponseCommandList.put("show", new Show(collectionManager));
     }
 
     public ArrayList<Response> executeRequest(Request request) {
@@ -79,5 +79,10 @@ public class CommandsManager {
         String commandName = request.getCommand().toLowerCase(Locale.ROOT);
         io.printText(commandName);
         return commandName.equals("next");
+    }
+
+    public boolean isRich(Request request){
+        String commandName = request.getCommand().toLowerCase(Locale.ROOT);
+        return richResponseCommandList.containsKey(commandName);
     }
 }

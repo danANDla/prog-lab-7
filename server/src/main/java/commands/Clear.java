@@ -2,19 +2,20 @@ package commands;
 
 import commands.types.Command;
 import udp.Response;
+import utils.CollectionManager;
 import utils.DBmanager;
 
 public class Clear implements Command {
-    private DBmanager dbmanager;
+    private CollectionManager collectionManager;
 
-    public Clear(DBmanager dbmanager) {
-        this.dbmanager = dbmanager;
+    public Clear(CollectionManager collectionManager) {
+        this.collectionManager = collectionManager;
     }
 
     @Override
     public Response execute() {
         CommandStatus res = CommandStatus.FAIL;
-        if (dbmanager.clearTable()) res = CommandStatus.OK;
+        if (collectionManager.clearList()) res = CommandStatus.OK;
         return new Response("clear", res.getDescription(), null);
     }
 }

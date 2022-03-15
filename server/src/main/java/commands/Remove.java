@@ -2,14 +2,15 @@ package commands;
 
 import commands.types.ArgumentedCommand;
 import udp.Response;
+import utils.CollectionManager;
 import utils.DBmanager;
 
 public class Remove implements ArgumentedCommand {
-    DBmanager dbmanager;
+    private CollectionManager collectionManager;
     private int bandId;
 
-    public Remove(DBmanager dbmanager) {
-        this.dbmanager = dbmanager;
+    public Remove(CollectionManager collectionManager) {
+        this.collectionManager = collectionManager;
     }
 
     @Override
@@ -32,7 +33,7 @@ public class Remove implements ArgumentedCommand {
     public Response execute() {
         CommandStatus res = CommandStatus.FAIL;
         String msg = "";
-        if (dbmanager.removeById(bandId)) res = CommandStatus.OK;
+        if (collectionManager.removeBand(bandId)) res = CommandStatus.OK;
         else msg = ": no such id";
         return new Response("remove_by_id", res.getDescription() + msg, null);
     }

@@ -51,7 +51,9 @@ public class CollectionManager {
 
     public boolean insertBand(MusicBand newBand) {
         lock();
-        if(db.add(newBand)){
+        Integer newId = db.add(newBand);
+        if(newId != null){
+            newBand.setId(newId);
             bandsList.add(newBand);
             unlock();
             return true;

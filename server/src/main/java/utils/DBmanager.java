@@ -88,7 +88,7 @@ public class DBmanager {
         return false;
     }
 
-    public boolean add(MusicBand band) {
+    public Integer add(MusicBand band) {
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(ADD, Statement.RETURN_GENERATED_KEYS);
             preparedStatement.setString(1, band.getName());
@@ -107,16 +107,16 @@ public class DBmanager {
             if (preparedStatement.executeUpdate() != 0) {
                 ResultSet resultSet = preparedStatement.getGeneratedKeys();
                 if (resultSet.next()) {
-                    long id = resultSet.getLong(1);
+                    int id = resultSet.getInt(1);
                     io.printText("added band, id = " + id);
-                    return true;
+                    return id;
                 }
             }
 
         } catch (SQLException e) {
             io.printError("Exception while adding band to DB " + e);
         }
-        return false;
+        return null;
     }
 
     public boolean update(int bandid, MusicBand band) {

@@ -35,46 +35,8 @@ public class ServerApplication {
     }
 
     public void start() {
-//        listening();
         collectionManager.sync();
         io.printWarning("local collection synchronized with db");
         new Thread(poolServer).start();
-    }
-
-    public void listening() {
-        collectionManager.sync();
-        io.printWarning("local collection synchronized with db");
-        while (true) {
-            try {
-                Request recieved = udp.recieveRequest();
-                if (recieved == null) throw new Exception();
-                ArrayList<Response> respList = commandsManager.executeRequest(recieved);
-                if (respList == null) {
-                    udp.sendError(ResponseError.INVALID_COMMAND, recieved);
-                } else {
-                    if (!commandsManager.isRich(recieved)) {
-                        udp.sendReponse(respList.get(0), recieved.getSender());
-                    } else {
-                        io.printWarning("rich command");
-                        udp.sendReponse(
-                                new Response("showheader", Integer.toString(respList.size()), null),
-                                recieved.getSender()
-                        );
-                        for (Response resp : respList) {
-                            System.out.println(resp);
-                        }
-                        for (Response resp : respList) {
-                            Request next = udp.recieveRequest();
-                            if (next == null) throw new Exception();
-                            if (commandsManager.next(next)) {
-                                udp.sendReponse(resp, recieved.getSender());
-                            }
-                        }
-                    }
-                }
-            } catch (Exception e) {
-                io.printError("Exception while receiving package: " + e);
-            }
-        }
     }
 }

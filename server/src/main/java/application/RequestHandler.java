@@ -35,33 +35,6 @@ public class RequestHandler implements Runnable {
 
             ResponseSender responseSender = new ResponseSender(respList, commandsManager, recieved, udp, io);
             forkJoinPool.invoke(responseSender);
-
-//            RequestExecutor requestExecutor = new RequestExecutor(commandsManager, recieved);
-//            ArrayList<Response> respList =
-//            ArrayList<Response> respList = commandsManager.executeRequest(recieved);
-//            if (respList == null) {
-//                udp.sendError(ResponseError.INVALID_COMMAND, recieved);
-//            } else {
-//                if (!commandsManager.isRich(recieved)) {
-//                    udp.sendReponse(respList.get(0), recieved.getSender());
-//                } else {
-//                    io.printWarning("rich command");
-//                    udp.sendReponse(
-//                            new Response("showheader", Integer.toString(respList.size()), null),
-//                            recieved.getSender()
-//                    );
-//                    for (Response resp : respList) {
-//                        System.out.println(resp);
-//                    }
-//                    for (Response resp : respList) {
-//                        Request next = udp.recieveRequest();
-//                        if (next == null) throw new Exception();
-//                        if (commandsManager.next(next)) {
-//                            udp.sendReponse(resp, recieved.getSender());
-//                        }
-//                    }
-//                }
-//            }
         } catch (Exception e) {
             io.printError("Exception while receiving package: " + e);
         }

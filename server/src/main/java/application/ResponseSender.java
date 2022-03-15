@@ -44,16 +44,6 @@ public class ResponseSender extends RecursiveTask<Void> {
                 }
                 for (Response resp : respList) {
                     udp.sendReponse(resp, recieved.getSender());
-//                    Request next = null;
-//                    try {
-//                        next = udp.recieveRequest();
-//                        if (next == null) throw new IOException();
-//                        if (commandsManager.next(next)) {
-//                            udp.sendReponse(resp, recieved.getSender());
-//                        }
-//                    } catch (IOException e) {
-//                        e.printStackTrace();
-//                    }
                 }
             }
         }

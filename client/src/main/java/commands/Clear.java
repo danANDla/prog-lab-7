@@ -2,14 +2,15 @@ package commands;
 
 import commands.types.RemoteCommand;
 import udp.Request;
+import users.User;
 
 import java.net.SocketAddress;
 
 public class Clear implements RemoteCommand {
 
     @Override
-    public Request makeRequest(SocketAddress sender) {
-        return new Request("clear", null, null, sender);
+    public Request makeRequest(User user, SocketAddress sender) {
+        return new Request(user, "clear", null, null, sender);
     }
 
     @Override

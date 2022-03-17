@@ -17,6 +17,15 @@ public class IOutil{
     public void printText(String text){
         System.out.println(text);
     }
+    public void printText(String text, int mode){
+        switch (mode){
+            case 1:
+                System.out.print(text);
+                break;
+            default:
+                printText(text);
+        }
+    }
     public void printWarning(String text){
         System.out.println( "\u001B[33m" + text + "\u001B[0m");
     }

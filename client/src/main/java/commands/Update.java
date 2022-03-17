@@ -1,6 +1,7 @@
 package commands;
 
 import collection.MusicBand;
+import users.User;
 import utils.MusicBandFactory;
 import commands.types.RemoteArgumentedCommand;
 import udp.Request;
@@ -36,9 +37,9 @@ public class Update implements RemoteArgumentedCommand {
     }
 
     @Override
-    public Request makeRequest(SocketAddress sender) {
+    public Request makeRequest(User user, SocketAddress sender) {
         MusicBand musicBand = musicBandFactory.makeBand();
-        return new Request("update", Integer.toString(bandId), musicBand, sender);
+        return new Request(user, "update", Integer.toString(bandId), musicBand, sender);
     }
 
     @Override

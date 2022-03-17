@@ -2,6 +2,7 @@ package commands;
 
 import commands.types.RemoteArgumentedCommand;
 import udp.Request;
+import users.User;
 import utils.IOutil;
 
 import java.net.SocketAddress;
@@ -32,8 +33,8 @@ public class Remove implements RemoteArgumentedCommand {
     }
 
     @Override
-    public Request makeRequest(SocketAddress sender) {
-        return new Request("remove", Integer.toString(bandId), null, sender);
+    public Request makeRequest(User user, SocketAddress sender) {
+        return new Request(user, "remove", Integer.toString(bandId), null, sender);
     }
 
     @Override

@@ -6,6 +6,7 @@ import collection.MusicGenre;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Locale;
 
 public class Asker implements Serializable {
     private final IOutil io;
@@ -303,5 +304,80 @@ public class Asker implements Serializable {
             }
         }
         return albumSales;
+    }
+
+    public String askMode(){
+        boolean valid = false;
+        String str = "";
+        str = io.readLine().trim();
+        while (str.equals("") ||
+                !(str.toLowerCase(Locale.ROOT).equals("log in") || str.toLowerCase(Locale.ROOT).equals("sign up"))) {
+            io.printError("Неверная команда");
+            str = io.readLine().trim();
+        }
+        return str;
+    }
+
+    public String askLogin(){
+        boolean valid = false;
+        String str = "";
+        while(!valid){
+            io.printText("имя пользователя: ", 1);
+            str = io.readLine().trim();
+            if(str.length() < 5){
+                io.printError("пользователя с таким именем не существует");
+            }
+            else{
+                return str;
+            }
+        }
+        return str;
+    }
+    public String askPassword(){
+        boolean valid = false;
+        String str = "";
+        while(!valid){
+            io.printText("пароль: ", 1);
+            str = io.readLine().trim();
+            if(str.length() < 5){
+                io.printError("неверный пароль");
+            }
+            else{
+                return str;
+            }
+        }
+        return str;
+    }
+
+    public String newLogin(){
+        boolean valid = false;
+        String str = "";
+        while(!valid){
+            io.printText("имя пользователя: ", 1);
+            str = io.readLine().trim();
+            if(str.length() < 5){
+                io.printError("имя пользователя должно быть длиной не менее 5 символов");
+            }
+            else{
+                return str;
+            }
+        }
+        return str;
+    }
+
+    public String newPassword(){
+        boolean valid = false;
+        String str = "";
+        while(!valid){
+            io.printText("пароль: ", 1);
+            str = io.readLine().trim();
+            if(str.length() < 5){
+                io.printError("пароль должен быть длиной не менее 5 символов");
+            }
+            else{
+                return str;
+            }
+        }
+        return str;
     }
 }

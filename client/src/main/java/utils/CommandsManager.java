@@ -7,6 +7,7 @@ import commands.types.RemoteCommand;
 import udp.Request;
 import udp.Response;
 import udp.UDPclient;
+import users.User;
 
 import java.net.SocketAddress;
 import java.util.ArrayDeque;
@@ -25,12 +26,12 @@ public class CommandsManager {
 
     ArrayDeque<String> history;
 
-    public CommandsManager(IOutil ioutil) {
+    public CommandsManager(IOutil ioutil, Asker asker, UDPclient udpclient) {
         io = ioutil;
-        asker = new Asker(io);
+        this.asker = asker;
         musicBandFactory = new MusicBandFactory(asker);
         history = new ArrayDeque<String>();
-        udp = new UDPclient(io);
+        udp = udpclient;
         fillLists();
     }
 
@@ -55,7 +56,7 @@ public class CommandsManager {
         richCommandsList.put("show", new Show());
     }
 
-    public void executeCommand(String newCommand) {
+    public void executeCommand(String newCommand, User user) {
         String[] command = newCommand.trim().toLowerCase(Locale.ROOT).split("\\s+");
         if (localComandsList.containsKey(command[0])) {
             LocalCommand parsedCommand = localComandsList.get(command[0]);
@@ -66,11 +67,11 @@ public class CommandsManager {
             }
         } else {
             SocketAddress sender = udp.getAddress();
-            sendCommand(newCommand, sender);
+            sendCommand(newCommand, user, sender);
         }
     }
 
-    private void sendCommand(String newCommand, SocketAddress sender) {
+    private void sendCommand(String newCommand, User user, SocketAddress sender) {
         String[] command = newCommand.trim().toLowerCase(Locale.ROOT).split("\\s+");
         Response resp = null;
         if (argumentedComandsList.containsKey(command[0])) {
@@ -78,14 +79,14 @@ public class CommandsManager {
 
             //TODO add command package and send
             if (parsedCommand.parseArgs(command)) {
-                Request newReq = parsedCommand.makeRequest(sender);
+                Request newReq = parsedCommand.makeRequest(user, sender);
                 udp.sendCommand(newReq);
                 udp.receiveResponse();
             }
         } else if (commandsList.containsKey(command[0])) {
             RemoteCommand parsedCommand = commandsList.get(command[0]);
 
-            Request newReq = parsedCommand.makeRequest(sender);
+            Request newReq = parsedCommand.makeRequest(user, sender);
             udp.sendCommand(newReq);
             resp = udp.receiveResponse();
             if (resp != null) {
@@ -95,7 +96,7 @@ public class CommandsManager {
             io.printWarning("prepare for receiving multiple packets");
             RemoteCommand parsedCommand = richCommandsList.get(command[0]);
 
-            Request req = parsedCommand.makeRequest(sender);
+            Request req = parsedCommand.makeRequest(user, sender);
             udp.sendCommand(req);
 
             Response header = udp.receiveResponse();

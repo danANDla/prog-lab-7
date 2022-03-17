@@ -1,6 +1,7 @@
 package commands;
 
 import collection.MusicBand;
+import users.User;
 import utils.MusicBandFactory;
 import commands.types.RemoteCommand;
 import udp.Request;
@@ -15,9 +16,9 @@ public class Add implements RemoteCommand {
     }
 
     @Override
-    public Request makeRequest(SocketAddress sender) {
+    public Request makeRequest(User user, SocketAddress sender) {
         MusicBand musicBand = musicBandFactory.makeBand();
-        return new Request("add", null, musicBand, sender);
+        return new Request(user, "add", null, musicBand, sender);
     }
 
     @Override

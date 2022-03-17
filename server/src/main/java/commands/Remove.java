@@ -1,11 +1,13 @@
 package commands;
 
-import commands.types.ArgumentedCommand;
+import commands.types.ExtendedCommand;
+import udp.Request;
 import udp.Response;
 import utils.CollectionManager;
-import utils.DBmanager;
 
-public class Remove implements ArgumentedCommand {
+import java.util.Locale;
+
+public class Remove implements ExtendedCommand {
     private CollectionManager collectionManager;
     private int bandId;
 
@@ -13,7 +15,6 @@ public class Remove implements ArgumentedCommand {
         this.collectionManager = collectionManager;
     }
 
-    @Override
     public boolean parseArgs(String[] command) {
         if (command.length < 1) {
             System.out.println("введено недостаточно аргументов");
@@ -36,5 +37,14 @@ public class Remove implements ArgumentedCommand {
         if (collectionManager.removeBand(bandId)) res = CommandStatus.OK;
         else msg = ": no such id";
         return new Response("remove_by_id", res.getDescription() + msg, null);
+    }
+
+    @Override
+    public Response extendedExecute(Request request) {
+        String[] commandArgs = request.getArgs().trim().toLowerCase(Locale.ROOT).split("\\s+");
+        if(parseArgs(commandArgs)){
+            return execute();
+        }
+        return null;
     }
 }

@@ -1,12 +1,14 @@
 package commands;
 
 import collection.MusicBand;
-import commands.types.ArgumentedExtendedCommand;
+import commands.types.ExtendedCommand;
+import udp.Request;
 import udp.Response;
 import utils.CollectionManager;
-import utils.DBmanager;
 
-public class Update implements ArgumentedExtendedCommand {
+import java.util.Locale;
+
+public class Update implements ExtendedCommand {
     private CollectionManager collectionManager;
     private int bandId;
     private MusicBand band;
@@ -15,7 +17,6 @@ public class Update implements ArgumentedExtendedCommand {
         this.collectionManager = collectionManager;
     }
 
-    @Override
     public boolean parseArgs(String[] command) {
         if (command.length < 1) {
             System.out.println("введено недостаточно аргументов");
@@ -32,9 +33,13 @@ public class Update implements ArgumentedExtendedCommand {
     }
 
     @Override
-    public Response extendedExecute(MusicBand band) {
-        this.band = band;
-        return execute();
+    public Response extendedExecute(Request request) {
+        String[] commandArgs = request.getArgs().trim().toLowerCase(Locale.ROOT).split("\\s+");
+        if(parseArgs(commandArgs)){
+            this.band = request.getMusicBand();
+            return execute();
+        }
+        return null;
     }
 
     @Override

@@ -2,20 +2,20 @@ package udp;
 
 
 import collection.MusicBand;
+import users.User;
 
 import java.io.Serializable;
 import java.net.SocketAddress;
 
 public class Request implements Serializable {
+    private User user;
     private String command;
     private String args;
     private MusicBand musicBand;
     private SocketAddress sender;
 
-    public Request() {
-    }
-
-    public Request(String command, String args, MusicBand musicBand, SocketAddress sender) {
+    public Request(User user, String command, String args, MusicBand musicBand, SocketAddress sender) {
+        this.user = user;
         this.command = command;
         this.args = args;
         this.musicBand = musicBand;
@@ -52,6 +52,14 @@ public class Request implements Serializable {
 
     public void setSender(SocketAddress sender) {
         this.sender = sender;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     @Override

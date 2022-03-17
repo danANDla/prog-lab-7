@@ -2,6 +2,7 @@ package commands;
 
 import collection.MusicBand;
 import commands.types.ExtendedCommand;
+import udp.Request;
 import udp.Response;
 import utils.CollectionManager;
 import utils.DBmanager;
@@ -15,8 +16,8 @@ public class Add implements ExtendedCommand {
     }
 
     @Override
-    public Response extendedExecute(MusicBand band) {
-        this.band = band;
+    public Response extendedExecute(Request request) {
+        this.band = request.getMusicBand();
         return execute();
     }
 

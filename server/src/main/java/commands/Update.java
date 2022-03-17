@@ -12,6 +12,7 @@ public class Update implements ExtendedCommand {
     private CollectionManager collectionManager;
     private int bandId;
     private MusicBand band;
+    private String login;
 
     public Update(CollectionManager collectionManager) {
         this.collectionManager = collectionManager;
@@ -34,6 +35,7 @@ public class Update implements ExtendedCommand {
 
     @Override
     public Response extendedExecute(Request request) {
+        this.login = request.getUser().getLogin();
         String[] commandArgs = request.getArgs().trim().toLowerCase(Locale.ROOT).split("\\s+");
         if(parseArgs(commandArgs)){
             this.band = request.getMusicBand();
@@ -44,10 +46,7 @@ public class Update implements ExtendedCommand {
 
     @Override
     public Response execute() {
-        CommandStatus res = CommandStatus.FAIL;
-        String msg = "";
-        if (collectionManager.updateBand(bandId, band)) res = CommandStatus.OK;
-        else msg = ": no such id";
-        return new Response("update", res.getDescription() + msg, null);
+        CommandStatus res = collectionManager.updateBand(login, bandId, band);
+        return new Response("update", res.getDescription(), null);
     }
 }

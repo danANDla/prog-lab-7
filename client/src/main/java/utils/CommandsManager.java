@@ -81,7 +81,10 @@ public class CommandsManager {
             if (parsedCommand.parseArgs(command)) {
                 Request newReq = parsedCommand.makeRequest(user, sender);
                 udp.sendCommand(newReq);
-                udp.receiveResponse();
+                resp = udp.receiveResponse();
+                if (resp != null) {
+                    io.printText(resp.getMsg());
+                }
             }
         } else if (commandsList.containsKey(command[0])) {
             RemoteCommand parsedCommand = commandsList.get(command[0]);

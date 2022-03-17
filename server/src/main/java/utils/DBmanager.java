@@ -4,6 +4,7 @@ import collection.Album;
 import collection.Coordinates;
 import collection.MusicBand;
 import collection.MusicGenre;
+import commands.CommandStatus;
 import commands.UserStatus;
 import users.User;
 
@@ -25,13 +26,15 @@ public class DBmanager {
     private LocalDate creationDate;
 
     private String ADD = "INSERT INTO BANDS (name, x, y, creation, participants, albums, description," +
-            "genre, bestname, besttracks, bestlength, bestsales) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
+            "genre, bestname, besttracks, bestlength, bestsales, userlogin) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)";
     private String UPDATE = "UPDATE BANDS SET (name, x, y, creation, participants, albums, description," +
-            "genre, bestname, besttracks, bestlength, bestsales) = (?,?,?,?,?,?,?,?,?,?,?,?) WHERE id=?";
+            "genre, bestname, besttracks, bestlength, bestsales, userlogin) = (?,?,?,?,?,?,?,?,?,?,?,?,?) WHERE id=?";
     private String COUNT = "SELECT COUNT(*) FROM BANDS";
+    private String FIND_ID = "SELECT COUNT(*) FROM BANDS WHERE id=?";
     private String DELETE = "DELETE FROM BANDS";
     private String DELETE_BY_ID = "DELETE FROM BANDS WHERE id=?";
     private String SHOW = "SELECT * FROM BANDS";
+    private String GET_LOGIN_BY_ID = "SELECT (userlogin) FROM BANDS where id=?";
 
     private String ADD_USER = "INSERT INTO USERS (login, password) VALUES (? , ?)";
     private String FIND_BY_LOGIN = "SELECT (login) FROM USERS WHERE login=?";
@@ -94,7 +97,7 @@ public class DBmanager {
         return false;
     }
 
-    public Integer add(MusicBand band) {
+    public Integer add(String login, MusicBand band) {
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(ADD, Statement.RETURN_GENERATED_KEYS);
             preparedStatement.setString(1, band.getName());
@@ -109,6 +112,7 @@ public class DBmanager {
             preparedStatement.setInt(10, band.getBestAlbum().getTracks());
             preparedStatement.setInt(11, band.getBestAlbum().getLength());
             preparedStatement.setDouble(12, band.getBestAlbum().getSales());
+            preparedStatement.setString(13, login);
             System.out.println(preparedStatement.toString());
             if (preparedStatement.executeUpdate() != 0) {
                 ResultSet resultSet = preparedStatement.getGeneratedKeys();
@@ -125,7 +129,40 @@ public class DBmanager {
         return null;
     }
 
-    public boolean update(int bandid, MusicBand band) {
+    private boolean checkRights(int bandid, String login){
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(GET_LOGIN_BY_ID, Statement.RETURN_GENERATED_KEYS);
+            preparedStatement.setInt(1, bandid);
+            ResultSet res = preparedStatement.executeQuery();
+            while (res.next()) {
+                if (res.getString("user").equals(login)) {
+                    return true;
+                } else return false;
+            }
+        } catch (SQLException e) {
+            io.printError("Exception while checkingLogin " + e);
+        }
+        return false;
+    }
+
+    private boolean containId(int id){
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(FIND_ID);
+            preparedStatement.setInt(1,id);
+            ResultSet res = preparedStatement.executeQuery();
+            if (res.next()) {
+                int k = res.getInt(1);
+                return k != 0;
+            }
+        } catch (SQLException e) {
+            io.printError("Exception while finding id " + e);
+        }
+        return false;
+    }
+
+    public CommandStatus update(String login, int bandid, MusicBand band) {
+        if(!containId(bandid)) return CommandStatus.BAD_ID;
+        if(!checkRights(bandid, login)) return CommandStatus.NO_RIGHTS;
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(UPDATE, Statement.RETURN_GENERATED_KEYS);
             preparedStatement.setString(1, band.getName());
@@ -143,13 +180,13 @@ public class DBmanager {
             preparedStatement.setInt(13, bandid);
             System.out.println(preparedStatement.toString());
             if (preparedStatement.executeUpdate() != 0) {
-                return true;
+                return CommandStatus.OK;
             }
 
         } catch (SQLException e) {
             io.printError("Exception while updating band " + e);
         }
-        return false;
+        return CommandStatus.FAIL;
     }
 
     public boolean clearTable() {

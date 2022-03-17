@@ -10,6 +10,7 @@ import utils.DBmanager;
 public class Add implements ExtendedCommand {
     private CollectionManager collectionManager;
     private MusicBand band;
+    private String login;
 
     public Add(CollectionManager collectionManager) {
         this.collectionManager = collectionManager;
@@ -18,16 +19,14 @@ public class Add implements ExtendedCommand {
     @Override
     public Response extendedExecute(Request request) {
         this.band = request.getMusicBand();
+        this.login = request.getUser().getLogin();
         return execute();
     }
 
     @Override
     public Response execute() {
         // CommandStatus res = collecManager.insertBand(this.band);
-        CommandStatus res = CommandStatus.FAIL;
-        if (collectionManager.insertBand(band)) {
-            res = CommandStatus.OK;
-        }
+        CommandStatus res = collectionManager.insertBand(login, band);
         return new Response("add", res.name(), null);
     }
 }

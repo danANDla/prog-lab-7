@@ -2,6 +2,7 @@ package utils;
 
 
 import collection.MusicBand;
+import commands.CommandStatus;
 import exceptions.InvalidIdException;
 
 import java.time.LocalDate;
@@ -49,17 +50,17 @@ public class CollectionManager {
         lock.unlock();
     }
 
-    public boolean insertBand(MusicBand newBand) {
+    public CommandStatus insertBand(String login, MusicBand newBand) {
         lock();
-        Integer newId = db.add(newBand);
+        Integer newId = db.add(login, newBand);
         if(newId != null){
             newBand.setId(newId);
             bandsList.add(newBand);
             unlock();
-            return true;
+            return CommandStatus.OK;
         }
         unlock();
-        return false;
+        return CommandStatus.FAIL;
     }
 
     public boolean removeBand(Integer idRemove) {
@@ -77,21 +78,22 @@ public class CollectionManager {
         return false;
     }
 
-    public boolean updateBand(Integer idUpdate, MusicBand newBand) {
+    public CommandStatus updateBand(String login, Integer idUpdate, MusicBand newBand) {
         lock();
-        if(db.update(idUpdate, newBand)){
+        CommandStatus res = db.update(login, idUpdate, newBand);
+        if(res == CommandStatus.OK){
             for (MusicBand band : bandsList) {
                 if (band.getId() == idUpdate) {
                     bandsList.remove(band);
                     newBand.setId(idUpdate);
                     bandsList.add(newBand);
                     unlock();
-                    return true;
+                    return res;
                 }
             }
         }
         unlock();
-        return false;
+        return res;
     }
 
     public boolean clearList() {
@@ -129,10 +131,6 @@ public class CollectionManager {
         }
         if (!found) throw new InvalidIdException();
         return null;
-    }
-
-    public void saveToXML() {
-        // TODO XML save
     }
 
     public void removeGreater() {

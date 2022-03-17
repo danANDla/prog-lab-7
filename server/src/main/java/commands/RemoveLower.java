@@ -25,7 +25,6 @@ public class RemoveLower implements ExtendedCommand {
     @Override
     public Response execute() {
         CommandStatus res = collectionManager.removeLower(this.login, this.musicBand);
-        System.out.println("HERE");
         return new Response("lower", res.getDescription(), null);
     }
 }

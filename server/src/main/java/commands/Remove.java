@@ -10,6 +10,7 @@ import java.util.Locale;
 public class Remove implements ExtendedCommand {
     private CollectionManager collectionManager;
     private int bandId;
+    private String login;
 
     public Remove(CollectionManager collectionManager) {
         this.collectionManager = collectionManager;
@@ -32,16 +33,14 @@ public class Remove implements ExtendedCommand {
 
     @Override
     public Response execute() {
-        CommandStatus res = CommandStatus.FAIL;
-        String msg = "";
-        if (collectionManager.removeBand(bandId)) res = CommandStatus.OK;
-        else msg = ": no such id";
-        return new Response("remove_by_id", res.getDescription() + msg, null);
+        CommandStatus res = collectionManager.removeBand(login, bandId);
+        return new Response("remove_by_id", res.getDescription(), null);
     }
 
     @Override
     public Response extendedExecute(Request request) {
         String[] commandArgs = request.getArgs().trim().toLowerCase(Locale.ROOT).split("\\s+");
+        this.login = request.getUser().getLogin();
         if(parseArgs(commandArgs)){
             return execute();
         }

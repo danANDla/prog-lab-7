@@ -6,6 +6,7 @@ import collection.MusicBand;
 import collection.MusicGenre;
 import commands.CommandStatus;
 import commands.UserStatus;
+import org.checkerframework.checker.units.qual.C;
 import users.User;
 
 import java.io.FileInputStream;
@@ -31,7 +32,7 @@ public class DBmanager {
             "genre, bestname, besttracks, bestlength, bestsales, userlogin) = (?,?,?,?,?,?,?,?,?,?,?,?,?) WHERE id=?";
     private String COUNT = "SELECT COUNT(*) FROM BANDS";
     private String FIND_ID = "SELECT COUNT(*) FROM BANDS WHERE id=?";
-    private String DELETE = "DELETE FROM BANDS";
+    private String DELETE = "DELETE FROM BANDS WHERE userlogin=?";
     private String DELETE_BY_ID = "DELETE FROM BANDS WHERE id=?";
     private String SHOW = "SELECT * FROM BANDS";
     private String GET_LOGIN_BY_ID = "SELECT (userlogin) FROM BANDS where id=?";
@@ -189,29 +190,33 @@ public class DBmanager {
         return CommandStatus.FAIL;
     }
 
-    public boolean clearTable() {
+    public CommandStatus clearTable(String login) {
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(DELETE);
+            preparedStatement.setString(1, login);
             if (preparedStatement.executeUpdate() != 0) {
-                return true;
+                return CommandStatus.OK;
             }
+            return CommandStatus.EMPTY_COLLECTION;
         } catch (SQLException e) {
             io.printError("Exception while clearing the table" + e);
         }
-        return false;
+        return CommandStatus.FAIL;
     }
 
-    public boolean removeById(int bandid) {
+    public CommandStatus removeById(String login, int bandid) {
+        if(!containId(bandid)) return CommandStatus.BAD_ID;
+        if(!checkRights(bandid, login)) return CommandStatus.NO_RIGHTS;
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(DELETE_BY_ID);
             preparedStatement.setInt(1, bandid);
             if (preparedStatement.executeUpdate() == 1) {
-                return true;
+                return CommandStatus.OK;
             }
         } catch (SQLException e) {
             io.printError("Exception while deleting element");
         }
-        return false;
+        return CommandStatus.FAIL;
     }
 
     public int countRows() {

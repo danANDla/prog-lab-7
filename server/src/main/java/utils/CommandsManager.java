@@ -33,16 +33,11 @@ public class CommandsManager {
 
     public void fillLists() {
         commandsList = new HashMap<String, Command>();
-        //argumentedComandsList = new HashMap<String, ArgumentedCommand>();
         extendedCommandList = new HashMap<String, ExtendedCommand>();
-        //argumentedExtendedCommandList = new HashMap<String, ArgumentedExtendedCommand>();
         richResponseCommandList = new HashMap<String, RichResponseCommand>();
 
         commandsList.put("info", new Info(collectionManager));
-        commandsList.put("clear", new Clear(collectionManager));
         commandsList.put("group", new Group(collectionManager));
-
-        //argumentedComandsList.put("remove", new Remove(collectionManager));
 
         extendedCommandList.put("add", new Add(collectionManager));
         extendedCommandList.put("remove", new Remove(collectionManager));
@@ -50,6 +45,7 @@ public class CommandsManager {
         extendedCommandList.put("auth", new Auth(userManager));
         extendedCommandList.put("reg", new Register(userManager));
         extendedCommandList.put("lower", new RemoveLower(collectionManager));
+        extendedCommandList.put("clear", new Clear(collectionManager));
 
         richResponseCommandList.put("show", new Show(collectionManager));
     }
@@ -59,10 +55,8 @@ public class CommandsManager {
         ArrayList<Response> respList = new ArrayList<>();
         String commandName = request.getCommand().toLowerCase(Locale.ROOT);
         if (extendedCommandList.containsKey(commandName)) {
-            io.printWarning(commandName);
             ExtendedCommand parsedCommand = extendedCommandList.get(commandName);
             resp = parsedCommand.extendedExecute(request);
-            System.out.println(resp);
         } else if (commandsList.containsKey(commandName)) {
             Command parsedCommand = commandsList.get(commandName);
             resp = parsedCommand.execute();
@@ -74,7 +68,6 @@ public class CommandsManager {
             io.printError("Такой команды не найдено");
         }
         respList.add(resp);
-        System.out.println(respList);
         return respList;
     }
 

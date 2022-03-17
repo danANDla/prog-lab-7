@@ -64,19 +64,20 @@ public class CollectionManager {
         return CommandStatus.FAIL;
     }
 
-    public boolean removeBand(Integer idRemove) {
+    public CommandStatus removeBand(String login, Integer idRemove) {
         lock();
-        if(db.removeById(idRemove)){
+        CommandStatus res = db.removeById(login, idRemove);
+        if(res == CommandStatus.OK){
             for (MusicBand band : bandsList) {
                 if (idRemove == band.getId()) {
                     bandsList.remove(band);
                     unlock();
-                    return true;
+                    return res;
                 }
             }
         }
         unlock();
-        return false;
+        return CommandStatus.FAIL;
     }
 
     public CommandStatus updateBand(String login, Integer idUpdate, MusicBand newBand) {
@@ -97,15 +98,16 @@ public class CollectionManager {
         return res;
     }
 
-    public boolean clearList() {
+    public CommandStatus clearList(String login) {
         lock();
-        if(db.clearTable()){
+        CommandStatus res = db.clearTable(login);
+        if(res == CommandStatus.OK){
             bandsList.clear();
             unlock();
-            return true;
+            return res;
         }
         unlock();
-        return false;
+        return res;
     }
 
     public String info() {
@@ -142,7 +144,7 @@ public class CollectionManager {
         for(MusicBand band: this.bandsList){
             if(band.getUserLogin().equals(login) && band.compareTo(musicBand) < 0){
 
-                if(db.removeById(band.getId())){
+                if(db.removeById(login, band.getId()) == CommandStatus.OK){
                     this.bandsList.remove(band);
                 }
             }

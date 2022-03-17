@@ -57,6 +57,7 @@ public class CommandsManager {
 
         argumentedComandsList.put("update", new Update(io, musicBandFactory));
         argumentedComandsList.put("remove_by_id", new Remove(io));
+        argumentedComandsList.put("remove_all_by_albums_count", new RemoveAlbums(io));
 
         richCommandsList.put("show", new Show());
     }

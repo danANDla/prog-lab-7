@@ -136,7 +136,7 @@ public class DBmanager {
             preparedStatement.setInt(1, bandid);
             ResultSet res = preparedStatement.executeQuery();
             while (res.next()) {
-                if (res.getString("user").equals(login)) {
+                if (res.getString("userlogin").equals(login)) {
                     return true;
                 } else return false;
             }

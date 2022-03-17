@@ -141,24 +141,29 @@ public class CollectionManager {
     }
 
     public CommandStatus removeLower(String login, MusicBand musicBand) {
+        lock();
         for(MusicBand band: this.bandsList){
             if(band.getUserLogin().equals(login) && band.compareTo(musicBand) < 0){
-
                 if(db.removeById(login, band.getId()) == CommandStatus.OK){
                     this.bandsList.remove(band);
                 }
             }
         }
+        unlock();
         return CommandStatus.OK;
     }
 
-    public void removeByAlbumsCount(int albumNumber) {
+    public CommandStatus removeByAlbumsCount(String login, int albumNumber) {
+        lock();
         for (MusicBand band : bandsList) {
             if (band.getAlbumsCount() == albumNumber) {
-                bandId = band.getId();
-                bandsList.remove(band);
+                if(db.removeById(login, band.getId()) == CommandStatus.OK){
+                    this.bandsList.remove(band);
+                }
             }
         }
+        unlock();
+        return CommandStatus.OK;
     }
 
     public String groupByDescription() {

@@ -50,39 +50,8 @@ public class CommandsManager {
         extendedCommandList.put("auth", new Auth(userManager));
         extendedCommandList.put("reg", new Register(userManager));
 
-        //argumentedExtendedCommandList.put("update", new Update(collectionManager));
-
         richResponseCommandList.put("show", new Show(collectionManager));
     }
-
-//    public ArrayList<Response> executeRequest(Request request) {
-//        Response resp = null;
-//        ArrayList<Response> respList = new ArrayList<>();
-//        String commandName = request.getCommand().toLowerCase(Locale.ROOT);
-//        if (extendedCommandList.containsKey(commandName)) {
-//            ExtendedCommand parsedCommand = extendedCommandList.get(commandName);
-//            resp = parsedCommand.extendedExecute(request);
-//        } else if (argumentedExtendedCommandList.containsKey(commandName)) {
-//            ArgumentedExtendedCommand parsedCommand = argumentedExtendedCommandList.get(commandName);
-//            String[] commandArgs = request.getArgs().trim().toLowerCase(Locale.ROOT).split("\\s+");
-//            if (parsedCommand.parseArgs(commandArgs)) resp = parsedCommand.extendedExecute(request);
-//        } else if (argumentedComandsList.containsKey(commandName)) {
-//            ArgumentedCommand parsedCommand = argumentedComandsList.get(commandName);
-//            String[] commandArgs = request.getArgs().trim().toLowerCase(Locale.ROOT).split("\\s+");
-//            if (parsedCommand.parseArgs(commandArgs)) resp = parsedCommand.execute();
-//        } else if (commandsList.containsKey(commandName)) {
-//            Command parsedCommand = commandsList.get(commandName);
-//            resp = parsedCommand.execute();
-//        } else if (richResponseCommandList.containsKey(commandName)) {
-//            RichResponseCommand parsedCommand = richResponseCommandList.get(commandName);
-//            respList = parsedCommand.richExecute();
-//            return respList;
-//        } else {
-//            io.printError("Такой команды не найдено");
-//        }
-//        respList.add(resp);
-//        return respList;
-//    }
 
     public ArrayList<Response> executeRequest(Request request){
         Response resp = null;

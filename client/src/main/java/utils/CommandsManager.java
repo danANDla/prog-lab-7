@@ -19,6 +19,7 @@ public class CommandsManager {
     private HashMap<String, RemoteArgumentedCommand> argumentedComandsList;
     private HashMap<String, LocalCommand> localComandsList;
     private HashMap<String, RemoteCommand> richCommandsList;
+    private Script script;
     private IOutil io;
     private MusicBandFactory musicBandFactory;
     private Asker asker;
@@ -33,6 +34,7 @@ public class CommandsManager {
         history = new ArrayDeque<String>();
         udp = udpclient;
         fillLists();
+        this.script = new Script(io,this);
     }
 
     public void fillLists() {
@@ -59,7 +61,10 @@ public class CommandsManager {
 
     public void executeCommand(String newCommand, User user) {
         String[] command = newCommand.trim().toLowerCase(Locale.ROOT).split("\\s+");
-        if (localComandsList.containsKey(command[0])) {
+        if(command[0].equals("execute_script")){
+            script.execute(command, user);
+        }
+        else if (localComandsList.containsKey(command[0])) {
             LocalCommand parsedCommand = localComandsList.get(command[0]);
             parsedCommand.execute();
             history.addFirst(command[0]);

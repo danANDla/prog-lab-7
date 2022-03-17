@@ -16,7 +16,7 @@ public class Script {
     private String path;
     private ArrayList<String> pathHistory;
     private CommandsManager commandsManager;
-    private static final String folder = "/home/danandla/BOTAY/programming/labs/prog-7/prog-lab-7/";
+    private static final String folder = "/home/danandla/BOTAY/programming/labs/prog-7/prog-lab-7/script/";
 
     public Script(IOutil io, CommandsManager commandsManager) {
         this.io = io;

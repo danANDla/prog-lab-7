@@ -158,8 +158,33 @@ public class CollectionManager {
         }
     }
 
-    public void groupByDescription() {
-        // todo groupByDescription
+    public String groupByDescription() {
+        int a = 0;
+        int b = 0;
+        int c = 0;
+        int d = 0;
+        int z = 0;
+        for (MusicBand band : bandsList) {
+            if(band.getDescription().length() == 0) z += 1;
+            else if(band.getDescription().length() > 0 && band.getDescription().length() < 100){
+                a+=1;
+            }
+            else if(band.getDescription().length() > 99 && band.getDescription().length() < 150){
+                b+=1;
+            }
+            else if(band.getDescription().length() > 149 && band.getDescription().length() < 200){
+                c+=1;
+            }
+            else{
+                d+=1;
+            }
+        }
+        String str = "group by words \n 0-99: " + Integer.toString(a) +
+                ", 100 - 149: " + Integer.toString(b) +
+                ", 150 - 199: " + Integer.toString(c) +
+                ", 200 - ...: " + Integer.toString(d) +
+                ", empty: " + Integer.toString(z);
+        return str;
     }
 
 

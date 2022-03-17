@@ -40,6 +40,7 @@ public class CommandsManager {
 
         commandsList.put("info", new Info(collectionManager));
         commandsList.put("clear", new Clear(collectionManager));
+        commandsList.put("group", new Group(collectionManager));
 
         //argumentedComandsList.put("remove", new Remove(collectionManager));
 

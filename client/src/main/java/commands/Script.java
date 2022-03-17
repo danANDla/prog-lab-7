@@ -38,8 +38,6 @@ public class Script {
         if (!parseArgs(command)) return;
         try {
             pathHistory.add(path);
-//            File ioFile = new File(path);
-//            if (!ioFile.canWrite() || ioFile.isDirectory() || !ioFile.isFile()) throw new IOException();
             FileInputStream fileInputStream = new FileInputStream(folder + path);
             InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream);
             Scanner scanner = new Scanner(inputStreamReader);

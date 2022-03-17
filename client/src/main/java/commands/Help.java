@@ -13,16 +13,19 @@ public class Help implements LocalCommand {
     private HashMap<String, RemoteArgumentedCommand> argumentedCommandsList;
     private HashMap<String, LocalCommand> localCommandsList;
     private HashMap<String, RemoteCommand> richCommandsList;
+    private Script script;
     private IOutil io;
 
     public Help(HashMap<String, RemoteCommand> commandsList,
                 HashMap<String, LocalCommand> localCommandsList,
                 HashMap<String, RemoteArgumentedCommand> argumentedCommandsList,
-                HashMap<String, RemoteCommand> richCommandsList, IOutil io) {
+                HashMap<String, RemoteCommand> richCommandsList,
+                Script script, IOutil io) {
         this.commandsList = commandsList;
         this.argumentedCommandsList = argumentedCommandsList;
         this.localCommandsList = localCommandsList;
         this.richCommandsList = richCommandsList;
+        this.script = script;
         this.io = io;
     }
 
@@ -42,6 +45,7 @@ public class Help implements LocalCommand {
         for (Map.Entry<String, RemoteArgumentedCommand> command : argumentedCommandsList.entrySet()) {
             io.printArgumentedCommand(command.getKey(), command.getValue().getArgsDescription(), command.getValue().getdescription());
         }
+        io.printArgumentedCommand("execute_script", script.getArgsDescription(), script.getdescription());
     }
 
     @Override

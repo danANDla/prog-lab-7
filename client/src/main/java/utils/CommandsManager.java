@@ -33,8 +33,8 @@ public class CommandsManager {
         musicBandFactory = new MusicBandFactory(asker);
         history = new ArrayDeque<String>();
         udp = udpclient;
-        fillLists();
         this.script = new Script(io,this);
+        fillLists();
     }
 
     public void fillLists() {
@@ -45,7 +45,7 @@ public class CommandsManager {
 
         localComandsList.put("exit", new Exit(io));
         localComandsList.put("help", new Help(commandsList, localComandsList,
-                argumentedComandsList, richCommandsList, io));
+                argumentedComandsList, richCommandsList, script, io));
         localComandsList.put("history", new History(history, io));
 
         commandsList.put("info", new Info());

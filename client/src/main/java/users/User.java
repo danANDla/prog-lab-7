@@ -23,3 +23,6 @@ public class User implements Serializable {
     }
 
 }
+
+//    имя пользователя: kdfjeo
+//    пароль: laskdf

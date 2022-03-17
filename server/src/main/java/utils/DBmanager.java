@@ -4,6 +4,8 @@ import collection.Album;
 import collection.Coordinates;
 import collection.MusicBand;
 import collection.MusicGenre;
+import commands.UserStatus;
+import users.User;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -22,14 +24,18 @@ public class DBmanager {
     private static IOutil io;
     private LocalDate creationDate;
 
-    private static final String ADD = "INSERT INTO BANDS (name, x, y, creation, participants, albums, description," +
+    private String ADD = "INSERT INTO BANDS (name, x, y, creation, participants, albums, description," +
             "genre, bestname, besttracks, bestlength, bestsales) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
-    private static final String UPDATE = "UPDATE BANDS SET (name, x, y, creation, participants, albums, description," +
+    private String UPDATE = "UPDATE BANDS SET (name, x, y, creation, participants, albums, description," +
             "genre, bestname, besttracks, bestlength, bestsales) = (?,?,?,?,?,?,?,?,?,?,?,?) WHERE id=?";
-    private static final String COUNT = "SELECT COUNT(*) FROM BANDS";
-    private static final String DELETE = "DELETE FROM BANDS";
-    private static final String DELETE_BY_ID = "DELETE FROM BANDS WHERE id=?";
-    private static final String SHOW = "SELECT * FROM BANDS";
+    private String COUNT = "SELECT COUNT(*) FROM BANDS";
+    private String DELETE = "DELETE FROM BANDS";
+    private String DELETE_BY_ID = "DELETE FROM BANDS WHERE id=?";
+    private String SHOW = "SELECT * FROM BANDS";
+
+    private String ADD_USER = "INSERT INTO USERS (login, password) VALUES (? , ?)";
+    private String FIND_BY_LOGIN = "SELECT (login) FROM USERS WHERE login=?";
+    private String GET_PASSWORD_BY_LOGIN = "SELECT (password) FROM USERS WHERE login=?";
 
     static {
         try {
@@ -213,5 +219,54 @@ public class DBmanager {
             io.printError("Exception while showing the table" + e);
         }
         return list;
+    }
+
+    private boolean userInTable(String login) {
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(FIND_BY_LOGIN);
+            preparedStatement.setString(1, login);
+            ResultSet res = preparedStatement.executeQuery();
+            if (res.next()) return true;
+            return false;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public UserStatus addUser(User newUser) {
+        if (userInTable(newUser.getLogin())) {
+            return UserStatus.BAD_LOGIN;
+        }
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(ADD_USER);
+            preparedStatement.setString(1, newUser.getLogin());
+            preparedStatement.setString(2, newUser.getPassword());
+            if (preparedStatement.executeUpdate() != 0) {
+                return UserStatus.OK;
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return UserStatus.FAIL;
+    }
+
+    public UserStatus checkUser(User user){
+        if (!userInTable(user.getLogin())) {
+            return UserStatus.BAD_LOGIN;
+        }
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(GET_PASSWORD_BY_LOGIN);
+            preparedStatement.setString(1, user.getLogin());
+            ResultSet res = preparedStatement.executeQuery();
+            while (res.next()) {
+                if (res.getString("password").equals(user.getPassword())) {
+                    return UserStatus.OK;
+                } else return UserStatus.BAD_AUTH;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return UserStatus.FAIL;
     }
 }

@@ -43,11 +43,19 @@ public class UserManager {
                 Response resp = udp.receiveResponse();
                 if(resp == null) return null;
                 String msg = resp.getMsg();
-                if(msg.equals("ok")){
+                if(msg.toLowerCase(Locale.ROOT).equals("ok")){
                     isauth = true;
+                    io.printText("Аутентификация прошла успешно");
+                }
+                else if(msg.toLowerCase(Locale.ROOT).equals("badlogin")){
+                    io.printError("пользователя с таким именем не существует");
+                }
+                else if(msg.toLowerCase(Locale.ROOT).equals("badauth")){
+                    io.printError("неверный пароль");
                 }
                 else{
-                    io.printError("неверный логин или пароль");
+                    io.printError("не удалось войти в аккаунт" +
+                            "\n" + "повторите попытку позже");
                 }
             }
             return this.user;
@@ -60,11 +68,16 @@ public class UserManager {
                 Response resp = udp.receiveResponse();
                 if(resp == null) return null;
                 String msg = resp.getMsg();
-                if(msg.equals("ok")){
+                if(msg.toLowerCase(Locale.ROOT).equals("ok")){
                     isreg = true;
+                    io.printText("Регистрация прошла успешно");
                 }
-                else if(resp.equals("badlogin")){
+                else if(msg.toLowerCase(Locale.ROOT).equals("badlogin")){
                     io.printError("пользователь с таким именем уже существует");
+                }
+                else{
+                    io.printError("не удалось зарегистрировать нового пользователя" +
+                            "\n" + "повторите попытку позже");
                 }
             }
             return this.user;

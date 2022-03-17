@@ -27,7 +27,7 @@ public class CommandsManager {
         this.io = io;
         this.collectionManager = collectionManager;
         this.dbmanager = dbmanager;
-        this.userManager = new UserManager();
+        this.userManager = new UserManager(dbmanager);
         fillLists();
     }
 
@@ -47,6 +47,7 @@ public class CommandsManager {
         extendedCommandList.put("remove", new Remove(collectionManager));
         extendedCommandList.put("update", new Update(collectionManager));
         extendedCommandList.put("auth", new Auth(userManager));
+        extendedCommandList.put("reg", new Register(userManager));
 
         //argumentedExtendedCommandList.put("update", new Update(collectionManager));
 

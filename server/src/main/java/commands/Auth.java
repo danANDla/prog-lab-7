@@ -16,8 +16,8 @@ public class Auth implements ExtendedCommand {
 
     @Override
     public Response execute() {
-        System.out.println(user.getLogin());
-        return new Response("auth", "ok", null);
+        UserStatus res = userManager.authUser(this.user);
+        return new Response("reg", res.getDescription(), null);
     }
 
     @Override

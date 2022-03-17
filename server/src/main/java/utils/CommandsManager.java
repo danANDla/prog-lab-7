@@ -49,6 +49,7 @@ public class CommandsManager {
         extendedCommandList.put("update", new Update(collectionManager));
         extendedCommandList.put("auth", new Auth(userManager));
         extendedCommandList.put("reg", new Register(userManager));
+        extendedCommandList.put("lower", new RemoveLower(collectionManager));
 
         richResponseCommandList.put("show", new Show(collectionManager));
     }
@@ -58,8 +59,10 @@ public class CommandsManager {
         ArrayList<Response> respList = new ArrayList<>();
         String commandName = request.getCommand().toLowerCase(Locale.ROOT);
         if (extendedCommandList.containsKey(commandName)) {
+            io.printWarning(commandName);
             ExtendedCommand parsedCommand = extendedCommandList.get(commandName);
             resp = parsedCommand.extendedExecute(request);
+            System.out.println(resp);
         } else if (commandsList.containsKey(commandName)) {
             Command parsedCommand = commandsList.get(commandName);
             resp = parsedCommand.execute();
@@ -71,6 +74,7 @@ public class CommandsManager {
             io.printError("Такой команды не найдено");
         }
         respList.add(resp);
+        System.out.println(respList);
         return respList;
     }
 

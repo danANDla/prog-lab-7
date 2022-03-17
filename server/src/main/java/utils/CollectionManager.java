@@ -55,6 +55,7 @@ public class CollectionManager {
         Integer newId = db.add(login, newBand);
         if(newId != null){
             newBand.setId(newId);
+            newBand.setUserLogin(login);
             bandsList.add(newBand);
             unlock();
             return CommandStatus.OK;
@@ -137,8 +138,16 @@ public class CollectionManager {
         // todo removeGreater
     }
 
-    public void removeLower() {
-        // todo removeLower
+    public CommandStatus removeLower(String login, MusicBand musicBand) {
+        for(MusicBand band: this.bandsList){
+            if(band.getUserLogin().equals(login) && band.compareTo(musicBand) < 0){
+
+                if(db.removeById(band.getId())){
+                    this.bandsList.remove(band);
+                }
+            }
+        }
+        return CommandStatus.OK;
     }
 
     public int albumsCount() {

@@ -51,6 +51,7 @@ public class CommandsManager {
         commandsList.put("info", new Info());
         commandsList.put("clear", new Clear());
         commandsList.put("add", new Add(musicBandFactory));
+        commandsList.put("remove_lower", new RemoveLower(musicBandFactory));
         commandsList.put("group_counting_by_description", new Group());
 
         argumentedComandsList.put("update", new Update(io, musicBandFactory));

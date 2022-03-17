@@ -3,7 +3,7 @@ package collection;
 import java.io.Serializable;
 import java.util.Date;
 
-public class MusicBand implements Serializable {
+public class MusicBand implements Serializable, Comparable<MusicBand> {
     private Integer id; //Поле не может быть null, Значение поля должно быть больше 0, Значение этого поля должно быть уникальным, Значение этого поля должно генерироваться автоматически
     private String name; //Поле не может быть null, Строка не может быть пустой
     private Coordinates coordinates; //Поле не может быть null
@@ -13,6 +13,7 @@ public class MusicBand implements Serializable {
     private String description; //Поле не может быть null
     private MusicGenre genre; //Поле не может быть null
     private Album bestAlbum; //Поле не может быть null
+    private String userLogin;
 
     public MusicBand(String name, Coordinates coordinates, Date creationDate, long numberOfParticipants, int albumsCount, String description, MusicGenre genre, Album bestAlbum) {
         this.name = name;
@@ -98,6 +99,28 @@ public class MusicBand implements Serializable {
 
     public void setBestAlbum(Album bestAlbum) {
         this.bestAlbum = bestAlbum;
+    }
+
+    public String getUserLogin() {
+        return userLogin;
+    }
+
+    public void setUserLogin(String userLogin) {
+        this.userLogin = userLogin;
+    }
+
+    @Override
+    public int compareTo(MusicBand o) {
+        int length = 0;
+        if(o.getBestAlbum().getLength() != null) length = o.getBestAlbum().getLength();
+        int thislength = 0;
+        if(this.bestAlbum.getLength() != null) thislength = this.bestAlbum.getLength();
+
+        Double comparingFlag = (this.coordinates.getX() * 10 + this.coordinates.getY() * 10 + this.albumsCount * 5 * thislength) -
+                (o.coordinates.getX() * 10 + o.coordinates.getY() * 10 + this.albumsCount * 5 * length);
+        if (comparingFlag > 0) return 1;
+        if (comparingFlag < 0) return -1;
+        return 0;
     }
 
     @Override

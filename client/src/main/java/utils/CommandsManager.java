@@ -53,6 +53,7 @@ public class CommandsManager {
         commandsList.put("add", new Add(musicBandFactory));
         commandsList.put("remove_lower", new RemoveLower(musicBandFactory));
         commandsList.put("group_counting_by_description", new Group());
+        commandsList.put("sum_of_albums_count", new AlbumsSum());
 
         argumentedComandsList.put("update", new Update(io, musicBandFactory));
         argumentedComandsList.put("remove_by_id", new Remove(io));

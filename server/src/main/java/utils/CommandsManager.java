@@ -37,6 +37,7 @@ public class CommandsManager {
         richResponseCommandList = new HashMap<String, RichResponseCommand>();
 
         commandsList.put("info", new Info(collectionManager));
+        commandsList.put("sumshow", new AlbumsSum(collectionManager));
         commandsList.put("group", new Group(collectionManager));
 
         extendedCommandList.put("add", new Add(collectionManager));

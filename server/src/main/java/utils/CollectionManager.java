@@ -152,14 +152,6 @@ public class CollectionManager {
         return CommandStatus.OK;
     }
 
-    public int albumsCount() {
-        int albumCounter = 0;
-        for (MusicBand band : bandsList) {
-            albumCounter += band.getAlbumsCount();
-        }
-        return albumCounter;
-    }
-
     public void removeByAlbumsCount(int albumNumber) {
         for (MusicBand band : bandsList) {
             if (band.getAlbumsCount() == albumNumber) {
@@ -207,5 +199,13 @@ public class CollectionManager {
                 io.printText(band.toString());
             }
         }
+    }
+
+    public String albumsCount(){
+        long count = 0;
+        for(MusicBand band: bandsList){
+            count += band.getAlbumsCount();
+        }
+        return Long.toString(count);
     }
 }

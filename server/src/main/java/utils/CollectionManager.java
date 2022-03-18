@@ -153,6 +153,20 @@ public class CollectionManager {
         return CommandStatus.OK;
     }
 
+    public CommandStatus removeGreater(String login, MusicBand musicBand) {
+        lock();
+        io.printWarning(login);
+        for(MusicBand band: this.bandsList){
+            if(band.getUserLogin().equals(login) && band.compareTo(musicBand) > 0){
+                if(db.removeById(login, band.getId()) == CommandStatus.OK){
+                    this.bandsList.remove(band);
+                }
+            }
+        }
+        unlock();
+        return CommandStatus.OK;
+    }
+
     public CommandStatus removeByAlbumsCount(String login, int albumNumber) {
         lock();
         for (MusicBand band : bandsList) {

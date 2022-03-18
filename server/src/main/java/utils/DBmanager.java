@@ -116,7 +116,7 @@ public class DBmanager {
             preparedStatement.setString(13, login);
             System.out.println(preparedStatement.toString());
             if (preparedStatement.executeUpdate() != 0) {
-                ResultSet resultSet = preparedStatement.getGeneratedKeys();
+               ResultSet resultSet = preparedStatement.getGeneratedKeys();
                 if (resultSet.next()) {
                     int id = resultSet.getInt(1);
                     io.printText("added band, id = " + id);
@@ -255,6 +255,7 @@ public class DBmanager {
                         )
                 );
                 band.setId(res.getInt("id"));
+                band.setUserLogin(res.getString("userlogin"));
                 list.add(band);
             }
         } catch (NullPointerException | SQLException e) {

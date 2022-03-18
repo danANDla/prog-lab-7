@@ -46,6 +46,7 @@ public class CommandsManager {
         extendedCommandList.put("auth", new Auth(userManager));
         extendedCommandList.put("reg", new Register(userManager));
         extendedCommandList.put("lower", new RemoveLower(collectionManager));
+        extendedCommandList.put("greater", new RemoveGreater(collectionManager));
         extendedCommandList.put("clear", new Clear(collectionManager));
         extendedCommandList.put("removebysum", new RemoveAlbums(collectionManager));
 

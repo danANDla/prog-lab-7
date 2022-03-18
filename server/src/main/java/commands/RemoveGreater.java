@@ -5,27 +5,26 @@ import commands.types.ExtendedCommand;
 import udp.Request;
 import udp.Response;
 import utils.CollectionManager;
-import utils.DBmanager;
 
-public class Add implements ExtendedCommand {
+public class RemoveGreater implements ExtendedCommand {
     private CollectionManager collectionManager;
-    private MusicBand band;
+    private MusicBand musicBand;
     private String login;
 
-    public Add(CollectionManager collectionManager) {
+    public RemoveGreater(CollectionManager collectionManager) {
         this.collectionManager = collectionManager;
     }
 
     @Override
     public Response extendedExecute(Request request) {
-        this.band = request.getMusicBand();
         this.login = request.getUser().getLogin();
+        this.musicBand = request.getMusicBand();
         return execute();
     }
 
     @Override
     public Response execute() {
-        CommandStatus res = collectionManager.insertBand(login, band);
-        return new Response("add", res.name(), null);
+        CommandStatus res = collectionManager.removeGreater(this.login, this.musicBand);
+        return new Response("greater", res.getDescription(), null);
     }
 }

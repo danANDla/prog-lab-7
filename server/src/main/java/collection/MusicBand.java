@@ -135,6 +135,7 @@ public class MusicBand implements Serializable, Comparable<MusicBand> {
                 ", description='" + description + '\'' +
                 ", genre=" + genre +
                 ", bestAlbum=" + bestAlbum +
+                ", userLogin='" + userLogin + '\'' +
                 '}';
     }
 }

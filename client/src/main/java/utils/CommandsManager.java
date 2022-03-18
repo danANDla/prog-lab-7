@@ -52,6 +52,7 @@ public class CommandsManager {
         commandsList.put("clear", new Clear());
         commandsList.put("add", new Add(musicBandFactory));
         commandsList.put("remove_lower", new RemoveLower(musicBandFactory));
+        commandsList.put("remove_greater", new RemoveGreater(musicBandFactory));
         commandsList.put("group_counting_by_description", new Group());
         commandsList.put("sum_of_albums_count", new AlbumsSum());
 
